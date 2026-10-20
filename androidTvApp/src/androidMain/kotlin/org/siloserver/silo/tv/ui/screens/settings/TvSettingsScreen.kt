@@ -321,6 +321,7 @@ fun TvSettingsScreen(
         onDolbyVisionEnabledChanged = viewModel::onDolbyVisionEnabledChanged,
         onDvProfile7HDR10FallbackChanged = viewModel::onDvProfile7HDR10FallbackChanged,
         onForceHdrPassthroughChanged = viewModel::onForceHdrPassthroughChanged,
+        onHevcLevelOverrideChanged = viewModel::onHevcLevelOverrideChanged,
         onTrueBlackBarsChanged = viewModel::onTrueBlackBarsChanged,
         onResumeRewindSecondsChanged = viewModel::onResumeRewindSecondsChanged,
         onPassOutThresholdChanged = viewModel::onPassOutThresholdChanged,
@@ -476,6 +477,7 @@ private fun SettingsSplitLayout(
     onDolbyVisionEnabledChanged: (Boolean) -> Unit,
     onDvProfile7HDR10FallbackChanged: (Boolean) -> Unit,
     onForceHdrPassthroughChanged: (Boolean) -> Unit,
+    onHevcLevelOverrideChanged: (Int) -> Unit,
     onTrueBlackBarsChanged: (Boolean) -> Unit,
     onResumeRewindSecondsChanged: (Int) -> Unit,
     onPassOutThresholdChanged: (Int) -> Unit,
@@ -564,6 +566,7 @@ private fun SettingsSplitLayout(
             onDolbyVisionEnabledChanged = onDolbyVisionEnabledChanged,
             onDvProfile7HDR10FallbackChanged = onDvProfile7HDR10FallbackChanged,
             onForceHdrPassthroughChanged = onForceHdrPassthroughChanged,
+            onHevcLevelOverrideChanged = onHevcLevelOverrideChanged,
             onTrueBlackBarsChanged = onTrueBlackBarsChanged,
             onResumeRewindSecondsChanged = onResumeRewindSecondsChanged,
             onPassOutThresholdChanged = onPassOutThresholdChanged,
@@ -855,6 +858,7 @@ private fun SettingsDetailPane(
     onDolbyVisionEnabledChanged: (Boolean) -> Unit,
     onDvProfile7HDR10FallbackChanged: (Boolean) -> Unit,
     onForceHdrPassthroughChanged: (Boolean) -> Unit,
+    onHevcLevelOverrideChanged: (Int) -> Unit,
     onTrueBlackBarsChanged: (Boolean) -> Unit,
     onResumeRewindSecondsChanged: (Int) -> Unit,
     onPassOutThresholdChanged: (Int) -> Unit,
@@ -918,6 +922,7 @@ private fun SettingsDetailPane(
             onDolbyVisionEnabledChanged = onDolbyVisionEnabledChanged,
             onDvProfile7HDR10FallbackChanged = onDvProfile7HDR10FallbackChanged,
             onForceHdrPassthroughChanged = onForceHdrPassthroughChanged,
+            onHevcLevelOverrideChanged = onHevcLevelOverrideChanged,
             onTrueBlackBarsChanged = onTrueBlackBarsChanged,
                 onResumeRewindSecondsChanged = onResumeRewindSecondsChanged,
                 onPassOutThresholdChanged = onPassOutThresholdChanged,
@@ -1222,6 +1227,7 @@ private fun TvPlaybackSettingsPane(
     onDolbyVisionEnabledChanged: (Boolean) -> Unit,
     onDvProfile7HDR10FallbackChanged: (Boolean) -> Unit,
     onForceHdrPassthroughChanged: (Boolean) -> Unit,
+    onHevcLevelOverrideChanged: (Int) -> Unit,
     onTrueBlackBarsChanged: (Boolean) -> Unit,
     onResumeRewindSecondsChanged: (Int) -> Unit,
     onPassOutThresholdChanged: (Int) -> Unit,
@@ -1346,6 +1352,11 @@ private fun TvPlaybackSettingsPane(
                     checked = state.forceHdrPassthrough,
                     onCheckedChange = onForceHdrPassthroughChanged,
                 )
+                SettingsValueRow(
+                    label = "HEVC Level Override",
+                    value = hevcLevelOverrideLabel(state.hevcLevelOverride),
+                    onClick = { activePicker = PlaybackPicker.HevcLevelOverride },
+                )
                 // Android TV only: tvOS composites its own letterbox, so the
                 // Apple pane has no counterpart (silo-android#475).
                 SettingsToggleRow(
@@ -1360,7 +1371,11 @@ private fun TvPlaybackSettingsPane(
                     text = stringResource(
                         CommonR.string.settings_streaming_footer,
                         QualityChoices.description(state.qualityResolution, state.maxBitrateKbps).text(),
-                    ),
+                    ) +
+                        // Fork: the HEVC Level Override sentence (English only).
+                        " HEVC Level Override reports a higher HEVC level than this device's decoder " +
+                        "advertises, so the server direct plays files tagged above it (such as level 6.2) " +
+                        "instead of transcoding them. Files that truly exceed the decoder may stutter or fail.",
                 )
             }
         }
@@ -1633,6 +1648,16 @@ private fun TvPlaybackSettingsPane(
             selectedId = state.resumeRewindSeconds.toString(),
             onSelect = { id ->
                 id.toIntOrNull()?.let(onResumeRewindSecondsChanged)
+                activePicker = null
+            },
+            onDismiss = { activePicker = null },
+        )
+        PlaybackPicker.HevcLevelOverride -> TvSettingsPickerSheet(
+            title = "HEVC Level Override",
+            options = HevcLevelOverrideOptions.map { PickerOption(it.toString(), hevcLevelOverrideLabel(it)) },
+            selectedId = state.hevcLevelOverride.toString(),
+            onSelect = { id ->
+                id.toIntOrNull()?.let(onHevcLevelOverrideChanged)
                 activePicker = null
             },
             onDismiss = { activePicker = null },
@@ -2340,6 +2365,7 @@ private enum class PlaybackPicker {
     BufferingQualityMode,
     ResumeRewind,
     PassOutThreshold,
+    HevcLevelOverride,
 }
 
 /** The label each intro-skip mode is offered under. The copy is fixed by the contract. */
@@ -3071,6 +3097,12 @@ private val PassOutThresholdOptions = listOf(0, 2, 3, 4, 5)
 
 // Up-Next prompt timing (seconds before end; 0 = at end). Mirrors tvOS.
 private val NextUpPromptOptions = listOf(0, 10, 30, 60, 120)
+
+// HEVC level override, normalized as level x 30 (0 = report the decoder's own).
+private val HevcLevelOverrideOptions = listOf(0, 150, 153, 156, 180, 183, 186)
+
+private fun hevcLevelOverrideLabel(level: Int): String =
+    if (level <= 0) "Auto" else "Level %d.%d".format(level / 30, (level % 30) / 3)
 
 @Composable
 private fun resumeRewindLabel(seconds: Int): String =
