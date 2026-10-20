@@ -325,6 +325,9 @@ class AndroidPlayerSettingsStore(
     override val forceHdrPassthroughFlow: Flow<Boolean> =
         profileScopedFlow(false) { p, s -> p.boolFor(s, PlaybackSettingsKeys.ForceHdrPassthrough, false) }
 
+    override val hevcLevelOverrideFlow: Flow<Int> =
+        profileScopedFlow(0) { p, s -> p.intFor(s, PlaybackSettingsKeys.HevcLevelOverride, 0) }
+
     override val letterboxExpansionFlow: Flow<String> =
         profileScopedFlow(LetterboxExpansion.Default) { p, s ->
             p.stringFor(s, PlaybackSettingsKeys.LetterboxExpansion, LetterboxExpansion.Default)
@@ -561,6 +564,9 @@ class AndroidPlayerSettingsStore(
 
     override suspend fun setForceHdrPassthrough(value: Boolean) =
         writeBoolLocal(PlaybackSettingsKeys.ForceHdrPassthrough, value)
+
+    override suspend fun setHevcLevelOverride(value: Int) =
+        writeIntLocal(PlaybackSettingsKeys.HevcLevelOverride, value.coerceAtLeast(0))
 
     override suspend fun setLetterboxExpansion(value: String) {
         val safe = if (value in LetterboxExpansion.Valid) value else LetterboxExpansion.Default
@@ -1067,6 +1073,7 @@ class AndroidPlayerSettingsStore(
                 // settings the user most associates with this device untouched.
                 it.remove(booleanPreferencesKey(scope.keyPrefix + PlaybackSettingsKeys.PictureInPictureEnabled))
                 it.remove(booleanPreferencesKey(scope.keyPrefix + PlaybackSettingsKeys.ForceHdrPassthrough))
+                it.remove(intPreferencesKey(scope.keyPrefix + PlaybackSettingsKeys.HevcLevelOverride))
                 it.remove(stringPreferencesKey(scope.keyPrefix + PlaybackSettingsKeys.LetterboxExpansion))
                 it.remove(booleanPreferencesKey(scope.keyPrefix + PlaybackSettingsKeys.TrueBlackBars))
                 it.remove(intPreferencesKey(scope.keyPrefix + PlaybackSettingsKeys.ResumeRewindSeconds))
