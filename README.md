@@ -1,11 +1,18 @@
-# Silo debug APKs with HEVC Level Override
+# Silo APKs with HEVC Level Override
 
 Built from branch `feat/hevc-level-override` at commit a80ea27.
 
-- `silo-tv-hevc-override-debug.apk`: Android TV (NVIDIA Shield, etc.)
-- `silo-phone-hevc-override-debug.apk`: phone/tablet
+**Use the release builds.** They are optimized (R8 + baseline profile) and
+much smoother than the debug builds.
 
-Universal (all-ABI) debug builds, signed with the Android debug key. They install
+| File | Device | Build |
+|---|---|---|
+| `silo-tv-hevc-override-release.apk` | Android TV (NVIDIA Shield, etc.) | optimized release |
+| `silo-phone-hevc-override-release.apk` | phone/tablet | optimized release |
+| `silo-tv-hevc-override-debug.apk` | Android TV | debug (slow, for troubleshooting) |
+| `silo-phone-hevc-override-debug.apk` | phone/tablet | debug (slow, for troubleshooting) |
+
+All are universal (all-ABI) and signed with the Android debug key. They install
 as `org.siloserver.silo`; uninstall any Play Store build first.
 
 Turn it on under Settings > Streaming > HEVC Level Override (TV) or
