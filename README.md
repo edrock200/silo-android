@@ -1,20 +1,28 @@
-# Silo APKs with HEVC Level Override
+# Silo 1.0.0-hevc APKs
 
-Built from branch `feat/hevc-level-override` at commit a80ea27.
+Optimized release builds (R8 + baseline profile) of the
+[edrock200/silo-android](https://github.com/edrock200/silo-android) fork:
+upstream Silo Android 1.0.0, newer upstream fixes, and an **HEVC Level Override**
+setting. Built from branch `feat/hevc-level-override-v2` at commit edc23052.
+See [CHANGELOG.md](CHANGELOG.md).
 
-**Use the release builds.** They are optimized (R8 + baseline profile) and
-much smoother than the debug builds.
+| File | Device | Version | Version code |
+|---|---|---|---|
+| [`silo-tv-1.0.0-hevc-release.apk`](silo-tv-1.0.0-hevc-release.apk) | Android TV (NVIDIA Shield, etc.) | 1.0.0-hevc (26) | 220000053 |
+| [`silo-phone-1.0.0-hevc-release.apk`](silo-phone-1.0.0-hevc-release.apk) | Phone / tablet | 1.0.0-hevc (26) | 220000052 |
 
-| File | Device | Build |
-|---|---|---|
-| `silo-tv-hevc-override-release.apk` | Android TV (NVIDIA Shield, etc.) | optimized release |
-| `silo-phone-hevc-override-release.apk` | phone/tablet | optimized release |
-| `silo-tv-hevc-override-debug.apk` | Android TV | debug (slow, for troubleshooting) |
-| `silo-phone-hevc-override-debug.apk` | phone/tablet | debug (slow, for troubleshooting) |
+## Install
 
-All are universal (all-ABI) and signed with the Android debug key. They install
-as `org.siloserver.silo`; uninstall any Play Store build first.
+- Universal APKs (all CPU types), signed with the Android debug key. They install
+  as `org.siloserver.silo` and update earlier builds from this branch in place.
+- They can't install over the official Play Store or GitHub release builds,
+  which use a different key. Uninstall those first; you'll need to sign in again.
 
-Turn it on under Settings > Streaming > HEVC Level Override (TV) or
-Settings > Playback > Decoder (phone). Choose Level 6.2 to direct play
-files tagged HEVC Main 10 level 6.2.
+## Use the HEVC Level Override
+
+- TV: Settings → Streaming → **HEVC Level Override**
+- Phone: Settings → Playback → Decoder → **HEVC Level Override**
+
+Choose **Level 6.2** to direct play files tagged HEVC Main 10 level 6.2. Auto
+reports only what the decoder advertises. Files that truly exceed the decoder may
+stutter or fail.
