@@ -49,6 +49,24 @@ Android 7.0 and 7.1 (API 24/25) are supported on both phone and Android TV. Vide
 
 ## Install APKs
 
+### This fork (HEVC Level Override)
+
+This fork, [edrock200/silo-android](https://github.com/edrock200/silo-android),
+adds an **HEVC Level Override** setting so files tagged above the decoder's
+advertised HEVC level (for example Main 10 level 6.2 on an NVIDIA Shield)
+direct play instead of transcoding. Fork builds are named after the upstream
+public version with a `-hevc` suffix, for example `1.0.0-hevc`. See
+[CHANGELOG.md](CHANGELOG.md).
+
+Optimized release APKs (universal, signed with the Android debug key) are on
+the [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds)
+branch. They don't install over the official Play Store or GitHub release
+builds, which use a different signing key, so uninstall those first. Turn the
+setting on under Settings → Streaming → HEVC Level Override (TV) or
+Settings → Playback → Decoder (phone).
+
+### Upstream builds
+
 Each store release publishes release-signed APKs, and these links always serve the latest one.
 
 | App | Downloader code | Downloader link | Direct APK |
@@ -74,6 +92,7 @@ A condensed tour. For the exhaustive, per-feature checklist (with phone/TV cover
 ### 📺 Playback (phone + TV)
 - **Adaptive delivery** — the server picks **Direct Play**, **Remux**, or **Transcode** from the device's real capabilities; the client can also fall back to transcode at runtime if a track turns out to be undecodable (e.g. an AV receiver is unplugged mid-stream).
 - **Deep capability detection** — enumerates hardware decoders (H.264, HEVC, AV1, VP9, **Dolby Vision** profiles 5/7/8), panel HDR (HDR10, HDR10+, HLG, DV), and audio-sink passthrough (**E-AC3 JOC/Atmos, TrueHD, DTS-HD**); an optional bundled **FFmpeg** audio decoder fills gaps for lossless codecs.
+- **HEVC Level Override** (this fork) — reports a user-chosen HEVC level (up to 6.2) to the server so over-tagged files direct play instead of transcoding.
 - **Quality-of-life** — staged playback buffering, per-content **refresh-rate matching** (phone), HDR toggle, intro auto-skip, chapters, sleep timer, playback speed, configurable video gravity (fit/fill/stretch).
 - **Tracks & subtitles** — audio-track switching (incl. mid-stream), subtitle selection with **styling, position, and sync offset**, plus a subtitle suite: provider **search & download** and **AI transcription/translation** with quota tracking.
 - **System integration** — single Media3 `MediaSession` powers lock-screen / notification / headset / Assistant controls; TV adds D-pad transport, an info HUD, a chapter scrubber, and HDMI EDID-driven display-mode selection.
