@@ -91,7 +91,8 @@ Decoder). It reports a user-chosen HEVC level to the server so files tagged
 above the decoder's advertised level direct play. It also plays YouTube
 trailers inside Silo (`YoutubeTrailerActivity`, YouTube's embedded player)
 instead of handing them to the YouTube app, whose profile picker dropped the
-video. Fork builds are versioned
+video, and adds a Trailer button next to Play on movie and series detail
+pages. Fork builds are versioned
 `<upstream public version>-hevc` and listed in `CHANGELOG.md`; optimized
 release APKs are published on the `apk-builds` branch.
 
