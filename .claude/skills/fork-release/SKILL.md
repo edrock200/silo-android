@@ -41,6 +41,12 @@ upstream `main` and ships optimized APKs for both apps.
   `<activity>` entry in both app manifests. If an upstream rebase conflicts
   in `YoutubeTrailerLauncher.kt`, keep upstream's external handoff order
   inside `openYoutubeTrailerExternally`.
+- Trailer button next to Play: `primaryTrailer()` in
+  `shared/.../model/catalog/TrailerRail.kt`; TV `HeroActionRow`
+  (`onPlayTrailer`) in `TvItemDetailScreen.kt`; phone `HeroActionStack`
+  (`onPlayTrailer`) in `DetailSharedComponents.kt`, fed by
+  `rememberHeroTrailerAction()` in `TrailersRail.kt` from
+  `MovieDetailContent.kt` and `SeriesDetailContent.kt`.
 
 ## Steps
 
