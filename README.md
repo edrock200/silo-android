@@ -38,3 +38,15 @@ then allow APK installs from Downloader when prompted.
 Choose **Level 6.2** to direct play files tagged HEVC Main 10 level 6.2. Auto
 reports only what the decoder advertises. Files that truly exceed the decoder may
 stutter or fail.
+
+## Trailers
+
+- Press **Trailer** next to Play on a movie or series page, or pick one from
+  the "Trailers & More" row.
+- A trailer stored on your Silo server plays first; otherwise the YouTube
+  trailer plays inside Silo, with no YouTube profile picker. The button is
+  hidden when a title has no trailer or teaser.
+- YouTube player remote: OK / Play-Pause pauses and resumes, Left / Right skip
+  10 seconds, Back closes. It closes itself when the trailer ends.
+- If a trailer's owner blocks playback outside YouTube, Silo opens the YouTube
+  app instead. YouTube may show its own ads.
