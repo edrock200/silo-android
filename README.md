@@ -8,8 +8,20 @@ See [CHANGELOG.md](CHANGELOG.md).
 
 | File | Device | Version | Version code |
 |---|---|---|---|
-| [`silo-tv-1.0.0-hevc-release.apk`](silo-tv-1.0.0-hevc-release.apk) | Android TV (NVIDIA Shield, etc.) | 1.0.0-hevc (26) | 220000053 |
-| [`silo-phone-1.0.0-hevc-release.apk`](silo-phone-1.0.0-hevc-release.apk) | Phone / tablet | 1.0.0-hevc (26) | 220000052 |
+| [`silo-tv-hevc-release.apk`](silo-tv-hevc-release.apk) | Android TV (NVIDIA Shield, etc.) | 1.0.0-hevc (26) | 220000053 |
+| [`silo-phone-hevc-release.apk`](silo-phone-hevc-release.apk) | Phone / tablet | 1.0.0-hevc (26) | 220000052 |
+
+## Direct download
+
+These links always serve the newest build from this branch.
+
+| App | Downloader code | Direct APK |
+|---|---:|---|
+| Android TV | _pending_ | <https://github.com/edrock200/silo-android/raw/apk-builds/silo-tv-hevc-release.apk> |
+| Phone / tablet | _pending_ | <https://github.com/edrock200/silo-android/raw/apk-builds/silo-phone-hevc-release.apk> |
+
+On Android TV / Google TV, install **Downloader by AFTVnews**, enter the code,
+then allow APK installs from Downloader when prompted.
 
 ## Install
 
