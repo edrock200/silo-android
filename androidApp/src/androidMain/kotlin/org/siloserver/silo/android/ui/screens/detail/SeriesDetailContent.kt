@@ -356,6 +356,7 @@ fun SeriesDetailContent(
                         stringResource(CommonR.string.detail_playEpisodeCode, episodeNumberText(resources, it))
                     } ?: computePlayLabel(resources, detail, nextEpisodeLabel),
                     onPlay = onPlayClick,
+                    onPlayTrailer = rememberHeroTrailerAction(detail, onPlayExtra),
                     onPlayFromBeginning = onPlayFromBeginning,
                     resumeStoppedAtLabel = resumeStoppedAtLabel,
                     isFavorite = isFavorite,
