@@ -42,6 +42,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material.icons.rounded.CheckCircleOutline
@@ -131,6 +132,8 @@ import org.siloserver.silo.model.catalog.isSpecialsForDisplay
 import org.siloserver.silo.model.catalog.selectedMediaRuntimeMinutes
 import org.siloserver.silo.model.catalog.titleRatings
 import org.siloserver.silo.model.catalog.trailerRailEntries
+import org.siloserver.silo.model.catalog.primaryTrailer
+import org.siloserver.silo.model.catalog.TrailerRailEntry
 import org.siloserver.silo.model.ebook.MediaRelatedItem
 import org.siloserver.silo.model.feature.MetadataAiFeatureStore
 import org.siloserver.silo.model.metadata.MetadataAiOnView
@@ -590,6 +593,8 @@ private fun TvDetailContent(
     val trailerEntries = remember(detail.videos, detail.extras) {
         trailerRailEntries(detail)
     }
+    // Fork: the hero Trailer button plays the item's main trailer.
+    val heroTrailer = remember(trailerEntries) { primaryTrailer(trailerEntries) }
     val detailContext = LocalContext.current
 
     // Default focus → Play (user-initiated), mirroring Apple's
@@ -1173,6 +1178,26 @@ private fun TvDetailContent(
                                     } else {
                                         null
                                     },
+                                    onPlayTrailer = heroTrailer
+                                        ?.takeIf { !isAudiobook }
+                                        ?.let { trailer ->
+                                            {
+                                                when (trailer) {
+                                                    is TrailerRailEntry.Remote ->
+                                                        openYoutubeTrailer(detailContext, trailer.video)
+                                                    is TrailerRailEntry.Local -> onPlay(
+                                                        trailer.extra.contentId,
+                                                        trailer.extra.fileId,
+                                                        false,
+                                                        null,
+                                                        false,
+                                                        null,
+                                                        "extra",
+                                                        0.0,
+                                                    )
+                                                }
+                                            }
+                                        },
                                 )
                             },
                         )
@@ -1897,6 +1922,8 @@ private fun HeroActionRow(
     onShuffleSeason: (org.siloserver.silo.model.catalog.Season) -> Unit = {},
     /** Series page only, while the hero shows an episode: returns it to the series. */
     onShowSeriesInfo: (() -> Unit)? = null,
+    /** Fork: plays the item's main trailer. Null hides the Trailer button. */
+    onPlayTrailer: (() -> Unit)? = null,
 ) {
     val resources = localizedResources()
     val watchPartyEntry = rememberTvWatchPartyDetailEntry()
@@ -2149,6 +2176,17 @@ private fun HeroActionRow(
                                 )
                             }
                         },
+                    )
+                }
+
+                if (onPlayTrailer != null) {
+                    TvSquareToggleButton(
+                        icon = Icons.Filled.Movie,
+                        iconActive = Icons.Filled.Movie,
+                        contentDescription = "Play trailer",
+                        titleOnFocus = "Trailer",
+                        isActive = false,
+                        onClick = onPlayTrailer,
                     )
                 }
 
