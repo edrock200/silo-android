@@ -88,7 +88,10 @@ Do not commit local SDK overrides, signing material, logs, tool state, generated
 This checkout is a fork of Silo-Server/silo-android that adds an **HEVC Level
 Override** setting (TV: Settings → Streaming; phone: Settings → Playback →
 Decoder). It reports a user-chosen HEVC level to the server so files tagged
-above the decoder's advertised level direct play. Fork builds are versioned
+above the decoder's advertised level direct play. It also plays YouTube
+trailers inside Silo (`YoutubeTrailerActivity`, YouTube's embedded player)
+instead of handing them to the YouTube app, whose profile picker dropped the
+video. Fork builds are versioned
 `<upstream public version>-hevc` and listed in `CHANGELOG.md`; optimized
 release APKs are published on the `apk-builds` branch.
 
