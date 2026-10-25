@@ -58,6 +58,22 @@ fun trailerRailEntries(detail: ItemDetail): List<TrailerRailEntry> = buildList {
         .forEach { add(TrailerRailEntry.Remote(it)) }
 }.distinctBy(TrailerRailEntry::key)
 
+/**
+ * The trailer the detail page's Trailer button plays: a local trailer first
+ * (it plays in Silo's own player), then a YouTube trailer, then a teaser the
+ * same way. Null when the item has neither, so the button stays hidden rather
+ * than playing a featurette or interview.
+ */
+fun primaryTrailer(entries: List<TrailerRailEntry>): TrailerRailEntry? {
+    for (kind in listOf("trailer", "teaser")) {
+        entries.firstOrNull { it is TrailerRailEntry.Local && it.kind.equals(kind, ignoreCase = true) }
+            ?.let { return it }
+        entries.firstOrNull { it is TrailerRailEntry.Remote && it.kind.equals(kind, ignoreCase = true) }
+            ?.let { return it }
+    }
+    return null
+}
+
 /** YouTube's still for a video. `hqdefault` exists for every upload. */
 fun youtubeThumbnailUrl(siteKey: String): String = "https://i.ytimg.com/vi/$siteKey/hqdefault.jpg"
 
