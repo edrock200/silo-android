@@ -80,7 +80,8 @@ upstream `main` and ships optimized APKs for both apps.
 7. **Publish** to the orphan `apk-builds` branch (separate clone, no
    force-push): overwrite `silo-tv-hevc-release.apk` and
    `silo-phone-hevc-release.apk`. Keep these names: the aftv.news Downloader
-   codes in its README point at
+   codes (TV `4536250`, phone `2364800`) in its README and in this repo's
+   README point at
    `https://github.com/edrock200/silo-android/raw/apk-builds/<name>`, so
    renaming breaks them. Copy `CHANGELOG.md`, update the version table in its
    `README.md` (leave the Downloader codes as they are), commit, and push.
