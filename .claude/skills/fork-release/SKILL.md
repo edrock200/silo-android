@@ -78,9 +78,14 @@ upstream `main` and ships optimized APKs for both apps.
 6. **Changelog.** Add a section to `CHANGELOG.md` on the new branch: the fork
    changes, then `git log --format='- %s' <public tag>..upstream/main`.
 7. **Publish** to the orphan `apk-builds` branch (separate clone, no
-   force-push): replace the APKs with
-   `silo-tv-<version>-hevc-release.apk` and
-   `silo-phone-<version>-hevc-release.apk`, copy `CHANGELOG.md`, update its
-   `README.md`, commit, and push. Also send both APKs to the user.
+   force-push): overwrite `silo-tv-hevc-release.apk` and
+   `silo-phone-hevc-release.apk`. Keep these names: the aftv.news Downloader
+   codes in its README point at
+   `https://github.com/edrock200/silo-android/raw/apk-builds/<name>`, so
+   renaming breaks them. Copy `CHANGELOG.md`, update the version table in its
+   `README.md` (leave the Downloader codes as they are), commit, and push.
+   Then check that each link returns HTTP 200 with the new size, and send both
+   APKs to the user. New Downloader codes can only be made by the user at
+   go.aftvnews.com, which requires a captcha.
    GitHub Releases can't be created from this environment (no `gh` token,
    and the GitHub tools can't upload release files).
