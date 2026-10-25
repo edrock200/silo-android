@@ -15,10 +15,10 @@ See [CHANGELOG.md](CHANGELOG.md).
 
 These links always serve the newest build from this branch.
 
-| App | Downloader code | Direct APK |
-|---|---:|---|
-| Android TV | _pending_ | <https://github.com/edrock200/silo-android/raw/apk-builds/silo-tv-hevc-release.apk> |
-| Phone / tablet | _pending_ | <https://github.com/edrock200/silo-android/raw/apk-builds/silo-phone-hevc-release.apk> |
+| App | Downloader code | Downloader link | Direct APK |
+|---|---:|---|---|
+| Android TV | `4536250` | <http://aftv.news/4536250> | <https://github.com/edrock200/silo-android/raw/apk-builds/silo-tv-hevc-release.apk> |
+| Phone / tablet | `2364800` | <http://aftv.news/2364800> | <https://github.com/edrock200/silo-android/raw/apk-builds/silo-phone-hevc-release.apk> |
 
 On Android TV / Google TV, install **Downloader by AFTVnews**, enter the code,
 then allow APK installs from Downloader when prompted.
