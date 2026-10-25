@@ -60,7 +60,14 @@ public version with a `-hevc` suffix, for example `1.0.0-hevc`. See
 
 Optimized release APKs (universal, signed with the Android debug key) are on
 the [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds)
-branch. They don't install over the official Play Store or GitHub release
+branch. These links always serve the newest fork build:
+
+| App | Downloader code | Downloader link | Direct APK |
+|---|---:|---|---|
+| Android TV | `4536250` | <http://aftv.news/4536250> | <https://github.com/edrock200/silo-android/raw/apk-builds/silo-tv-hevc-release.apk> |
+| Android | `2364800` | <http://aftv.news/2364800> | <https://github.com/edrock200/silo-android/raw/apk-builds/silo-phone-hevc-release.apk> |
+
+They don't install over the official Play Store or GitHub release
 builds, which use a different signing key, so uninstall those first. Turn the
 setting on under Settings → Streaming → HEVC Level Override (TV) or
 Settings → Playback → Decoder (phone).
