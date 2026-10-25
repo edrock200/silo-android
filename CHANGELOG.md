@@ -34,6 +34,13 @@ Based on upstream `main` at `51e480a4`, 23 commits after the public
     player doesn't start within 15 seconds, Silo hands the trailer to the
     YouTube app as before.
   - YouTube may show its own ads in the embedded player.
+- **Trailer button next to Play** (phone and TV, added in the 2026-10-25
+  rebuild). Movie and series detail pages get a Trailer button that plays
+  the main trailer without scrolling to the "Trailers & More" rail. It
+  prefers a local trailer, then a YouTube trailer, then a teaser, and is
+  hidden when the item has none.
+  - TV: in the action row, after Play / Start Over.
+  - Phone: first in the row of round buttons under Play.
 - **Build fix:** the Gradle Plugin Portal now serves different bytes for four
   Kotlin/Compose plugin marker POMs, which broke dependency verification on a
   clean machine. The new hashes are trusted alongside the old ones. Each
