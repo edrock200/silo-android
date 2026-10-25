@@ -33,6 +33,15 @@ upstream `main` and ships optimized APKs for both apps.
   trusting any new hash, and check that the marker only points to the
   matching artifact first.
 
+- In-app YouTube trailers: `android-shared/.../ui/YoutubeTrailerActivity.kt`
+  (WebView + YouTube IFrame API, served from base URL
+  `https://www.siloserver.org` because the embed rejects players without an
+  HTTPS origin/referrer), `YoutubeTrailerLauncher.kt` (`openYoutubeTrailer`
+  tries it first, `openYoutubeTrailerExternally` is the old handoff), and an
+  `<activity>` entry in both app manifests. If an upstream rebase conflicts
+  in `YoutubeTrailerLauncher.kt`, keep upstream's external handoff order
+  inside `openYoutubeTrailerExternally`.
+
 ## Steps
 
 1. **Sync.** `git remote add upstream https://github.com/Silo-Server/silo-android`
