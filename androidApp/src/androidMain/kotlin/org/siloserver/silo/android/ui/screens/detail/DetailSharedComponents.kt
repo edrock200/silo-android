@@ -50,6 +50,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.OndemandVideo
+import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
@@ -1616,6 +1617,8 @@ fun HeroActionStack(
     primaryProgress: Float? = null,
     /** See [PrimaryPillButton]'s `playsOnConnectedTv`. */
     playsOnConnectedTv: Boolean = true,
+    /** Fork: plays the item's main trailer. Null hides the Trailer button. */
+    onPlayTrailer: (() -> Unit)? = null,
 ) {
     var showResumeDialog by remember { mutableStateOf(false) }
     Column(
@@ -1634,6 +1637,17 @@ fun HeroActionStack(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Top,
         ) {
+            if (onPlayTrailer != null) {
+                CircleActionButton(
+                    icon = Icons.Filled.Movie,
+                    activeIcon = Icons.Filled.Movie,
+                    isActive = false,
+                    contentDescription = "Play trailer",
+                    onClick = onPlayTrailer,
+                    label = "Trailer",
+                    modifier = Modifier.weight(1f),
+                )
+            }
             CircleActionButton(
                 icon = Icons.Filled.FavoriteBorder,
                 activeIcon = Icons.Filled.Favorite,
