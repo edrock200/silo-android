@@ -49,14 +49,21 @@ Android 7.0 and 7.1 (API 24/25) are supported on both phone and Android TV. Vide
 
 ## Install APKs
 
-### This fork (HEVC Level Override)
+### This fork (HEVC Level Override and trailers)
 
 This fork, [edrock200/silo-android](https://github.com/edrock200/silo-android),
-adds an **HEVC Level Override** setting so files tagged above the decoder's
-advertised HEVC level (for example Main 10 level 6.2 on an NVIDIA Shield)
-direct play instead of transcoding. Fork builds are named after the upstream
-public version with a `-hevc` suffix, for example `1.0.0-hevc`. See
-[CHANGELOG.md](CHANGELOG.md).
+adds three things to upstream Silo:
+
+- **HEVC Level Override:** files tagged above the decoder's advertised HEVC
+  level (for example Main 10 level 6.2 on an NVIDIA Shield) direct play
+  instead of transcoding.
+- **In-app YouTube trailers:** trailers play inside Silo with YouTube's
+  embedded player instead of opening the YouTube app, whose "Who's watching?"
+  profile picker dropped the video.
+- **Trailer button next to Play** on movie and series detail pages.
+
+Fork builds are named after the upstream public version with a `-hevc`
+suffix, for example `1.0.0-hevc`. See [CHANGELOG.md](CHANGELOG.md).
 
 Optimized release APKs (universal, signed with the Android debug key) are on
 the [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds)
@@ -68,9 +75,17 @@ branch. These links always serve the newest fork build:
 | Android | `2364800` | <http://aftv.news/2364800> | <https://github.com/edrock200/silo-android/raw/apk-builds/silo-phone-hevc-release.apk> |
 
 They don't install over the official Play Store or GitHub release
-builds, which use a different signing key, so uninstall those first. Turn the
-setting on under Settings → Streaming → HEVC Level Override (TV) or
-Settings → Playback → Decoder (phone).
+builds, which use a different signing key, so uninstall those first.
+
+- **HEVC Level Override:** Settings → Streaming → HEVC Level Override (TV) or
+  Settings → Playback → Decoder (phone). Choose Level 6.2 for files tagged
+  HEVC Main 10 level 6.2.
+- **Trailers:** press **Trailer** next to Play, or pick one from the
+  "Trailers & More" row. It plays a trailer stored on your server first, then
+  the YouTube trailer. The button is hidden when a title has no trailer or
+  teaser. In the YouTube player, OK / Play-Pause pauses and resumes, Left /
+  Right skip 10 seconds, and Back closes. If a trailer's owner blocks playback
+  outside YouTube, Silo opens the YouTube app instead. YouTube may show ads.
 
 ### Upstream builds
 
