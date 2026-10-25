@@ -23,6 +23,17 @@ Based on upstream `main` at `51e480a4`, 23 commits after the public
   - Phone: Settings → Playback → Decoder → HEVC Level Override.
   - Stored per profile on the device. Default is Auto, which reports what
     the decoder reports.
+- **YouTube trailers play inside Silo** (phone and TV, added in the
+  2026-10-25 rebuild). Handing a trailer to the YouTube app could leave you
+  on YouTube's "Who's watching?" profile picker, so the trailer never
+  played. Trailers now open in a full-screen player that uses YouTube's
+  embedded player, which needs no account.
+  - Remote: OK / Play-Pause toggles, Left / Right seek 10 seconds, Back
+    closes. The player closes itself when the trailer ends.
+  - If the trailer's owner blocks embedding, the video is unavailable, or the
+    player doesn't start within 15 seconds, Silo hands the trailer to the
+    YouTube app as before.
+  - YouTube may show its own ads in the embedded player.
 - **Build fix:** the Gradle Plugin Portal now serves different bytes for four
   Kotlin/Compose plugin marker POMs, which broke dependency verification on a
   clean machine. The new hashes are trusted alongside the old ones. Each
