@@ -232,6 +232,7 @@ fun MovieDetailContent(
                 HeroActionStack(
                     primaryLabel = computePlayLabel(resources, detail),
                     onPlay = onPlayClick,
+                    onPlayTrailer = rememberHeroTrailerAction(detail, onPlayExtra),
                     onPlayFromBeginning = onPlayFromBeginning,
                     resumeStoppedAtLabel = resumeStoppedAtLabel,
                     isFavorite = isFavorite,
