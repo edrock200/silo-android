@@ -70,7 +70,7 @@ upstream `main` and ships optimized APKs for both apps.
    export ANDROID_HOME=/home/user/android-sdk   # install platforms;android-36 + build-tools;36.0.0 if missing
    for t in androidTvApp androidApp; do
      ./gradlew -I <scratchpad>/mirror.gradle :$t:assembleRelease \
-       -PsiloVersionName=1.0.0-hevc -PsiloBuildNumber=26 -PsiloVersionCode=110000026 \
+       -PsiloVersionName=<version>-hevc -PsiloBuildNumber=<build> -PsiloVersionCode=<version_code> \
        -PallowDebugReleaseSigning=true -PsiloReleaseChannel=sideload \
        -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=1g" \
        -Pkotlin.compiler.execution.strategy=in-process \
