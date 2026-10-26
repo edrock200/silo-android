@@ -37,7 +37,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.OndemandVideo
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material.icons.rounded.CheckCircleOutline
@@ -1906,8 +1906,8 @@ private fun HeroActionRow(
 
                 if (onPlayTrailer != null) {
                     TvSquareToggleButton(
-                        icon = Icons.Filled.Movie,
-                        iconActive = Icons.Filled.Movie,
+                        icon = Icons.Filled.OndemandVideo,
+                        iconActive = Icons.Filled.OndemandVideo,
                         contentDescription = "Play trailer",
                         titleOnFocus = "Trailer",
                         isActive = false,
