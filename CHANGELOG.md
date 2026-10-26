@@ -1,9 +1,29 @@
 # Changelog — edrock200/silo-android fork
 
 This fork tracks [Silo-Server/silo-android](https://github.com/Silo-Server/silo-android)
-and adds an HEVC level override. Fork builds use the upstream public version
-with a `-hevc` suffix. APKs are on the
+and adds an HEVC level override, in-app YouTube trailers, and a Trailer
+button. Fork builds use the upstream public version with a `-hevc` suffix.
+APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
+
+## 1.0.0-hevc (build 27) — 2026-10-26
+
+Based on upstream `main` at `3627b86c2`, the public 1.0.0 build 27
+(`v1.0.0-beta.27`). All fork changes from build 26 below are carried over.
+
+### Changed in this fork
+
+- The Trailer button now uses a screen-with-play icon. It used the same film
+  icon as the TV Version selector.
+
+### Upstream changes since build 26
+
+- feat(silocast): control a Roku from the Android phone (#686)
+- feat(pairing): sign in a Roku from the Android phone (#685)
+- feat(player): remember audio and subtitle choices for the whole series (#680)
+- fix(silocast): drop Connect by Address from the remote picker (#687)
+- fix(player): adopt a quality change that moves to a version without subtitles (#684)
+- test(pairing): hold the connect open in the abandoned-connect test (#690)
 
 ## 1.0.0-hevc (build 26) — 2026-10-24
 
