@@ -105,3 +105,18 @@ upstream `main` and ships optimized APKs for both apps.
    go.aftvnews.com, which requires a captcha.
    GitHub Releases can't be created from this environment (no `gh` token,
    and the GitHub tools can't upload release files).
+8. **Announce on Discord** after every new published build. Post to the
+   webhook in `$SILO_DISCORD_WEBHOOK`. Never write the webhook URL into the
+   repo, a commit, or a log: anyone with it can post to the channel. If the
+   variable is unset, ask the user to add it in the cloud environment's
+   settings (environment menu in the session title bar → Edit), and don't ask
+   them to paste it into the chat.
+   - Content, in plain language for non-technical users: the version, what's
+     new or fixed (from this release's `CHANGELOG.md` section, rewritten
+     without commit jargon or PR numbers), how to update, and the downloads:
+     TV Downloader code `4536250` (<http://aftv.news/4536250>) and phone code
+     `2364800` (<http://aftv.news/2364800>), plus the direct APK links.
+   - Build the JSON with Python's `json` module (not hand-escaped shell),
+     keep `content` under 2000 characters (Discord's limit), and send it with
+     `curl -sS -H 'Content-Type: application/json' -d @payload.json "$SILO_DISCORD_WEBHOOK"`.
+     Expect HTTP 204, and tell the user the post went out.
