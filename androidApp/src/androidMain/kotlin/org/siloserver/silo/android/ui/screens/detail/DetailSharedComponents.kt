@@ -50,7 +50,6 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.OndemandVideo
-import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
@@ -1436,8 +1435,8 @@ fun HeroActionStack(
         ) {
             if (onPlayTrailer != null) {
                 CircleActionButton(
-                    icon = Icons.Filled.Movie,
-                    activeIcon = Icons.Filled.Movie,
+                    icon = Icons.Filled.OndemandVideo,
+                    activeIcon = Icons.Filled.OndemandVideo,
                     isActive = false,
                     contentDescription = "Play trailer",
                     onClick = onPlayTrailer,
