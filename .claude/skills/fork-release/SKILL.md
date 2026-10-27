@@ -83,6 +83,19 @@ upstream `main` and ships optimized APKs for both apps.
      `https://maven-central.storage-download.googleapis.com/maven2/`, because
      Maven Central answers 429 to this environment. Recreate it in the
      scratchpad and never commit it. Dependency verification still applies.
+     Its full contents:
+
+     ```groovy
+     def mirror = { RepositoryHandler repos ->
+         repos.all { r ->
+             if (r instanceof MavenArtifactRepository && r.url.toString().startsWith("https://repo.maven.apache.org")) {
+                 r.url = "https://maven-central.storage-download.googleapis.com/maven2/"
+             }
+         }
+     }
+     settingsEvaluated { s -> mirror(s.pluginManagement.repositories); mirror(s.dependencyResolutionManagement.repositories) }
+     allprojects { mirror(buildscript.repositories); mirror(repositories) }
+     ```
    - Each app takes about 15 minutes. Run it in the background with a long
      timeout.
    - Never use `pkill -f <pattern>` in the same command as the build: it
