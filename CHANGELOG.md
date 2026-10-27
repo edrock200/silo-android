@@ -6,6 +6,19 @@ button. Fork builds use the upstream public version with a `-hevc` suffix.
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 27, rebuilt) — 2026-10-27
+
+Based on upstream `main` at `e9c410096`, 4 commits after the public 1.0.0
+build 27. Upstream hasn't tagged a new public build, so the version is
+unchanged. Fork changes are carried over unchanged.
+
+### Upstream changes since the 2026-10-26 build
+
+- feat(player): show the server's seek-bar previews while scrubbing (#695)
+- fix(player): show one centered loading spinner on phone and TV (#696)
+- feat(settings): retire the media card caption choice (#700)
+- docs(calendar): update the badge label comments (#698)
+
 ## 1.0.0-hevc (build 27) — 2026-10-26
 
 Based on upstream `main` at `3627b86c2`, the public 1.0.0 build 27
