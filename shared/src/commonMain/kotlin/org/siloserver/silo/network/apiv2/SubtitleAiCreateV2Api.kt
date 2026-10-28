@@ -10,6 +10,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.TimeSource
 import org.siloserver.silo.model.subtitles.*
 import org.siloserver.silo.network.*
 
@@ -30,7 +32,12 @@ class SubtitleAiCreateV2Api(
     private data class Intent(val owner: AuthScopeSnapshot, val file: Int, val kind: String,
         val source: Int, val sourceLanguage: String, val targetLanguage: String)
     private val mutex = Mutex()
-    private val unresolved = mutableSetOf<Intent>()
+    // Fork: an uncertain intent (lost reply, timeout, 5xx) used to stay fenced
+    // until the app restarted, so one Wi-Fi blip refused that translation for
+    // good. The server returns the existing job for an identical pending or
+    // running request instead of starting a second one, so after a cooldown a
+    // resend is safe and resolves the uncertainty.
+    private val unresolved = mutableMapOf<Intent, TimeSource.Monotonic.ValueTimeMark>()
 
     suspend fun create(request: SubtitleTranslateRequest, expected: AuthScopeSnapshot? = null): ApiResult<SubtitleAiJobResponse> {
         val owner = expected ?: tokens.snapshotCurrentScope() ?: return identityChanged()
@@ -42,8 +49,17 @@ class SubtitleAiCreateV2Api(
         }
         val intent = Intent(owner, request.mediaFileId, request.kind, request.sourceIndex,
             request.sourceLanguage.orEmpty(), request.targetLanguage.orEmpty())
-        if (!mutex.withLock { unresolved.add(intent) }) return ApiResult.Error(0, "subtitle_creation_uncertain",
-            "This subtitle request is pending or may have started. It has not been sent again.")
+        val fenced = mutex.withLock {
+            val since = unresolved[intent]
+            if (since != null && since.elapsedNow() < UNCERTAIN_RETRY_AFTER) {
+                true
+            } else {
+                unresolved[intent] = TimeSource.Monotonic.markNow()
+                false
+            }
+        }
+        if (fenced) return ApiResult.Error(0, "subtitle_creation_uncertain",
+            "This subtitle request is pending or may have started. Try again in a minute if nothing appears.")
         var settled = false
         try {
             val result = ownedV2Call<AiCreationReceipt, SubtitleAiJobResponse>(gate, tokens, owner, OwnerPolicy.PROFILE, HttpStatusCode.Accepted, { pinned ->
@@ -79,5 +95,9 @@ class SubtitleAiCreateV2Api(
         } finally {
             if (settled) withContext(NonCancellable) { mutex.withLock { unresolved.remove(intent) } }
         }
+    }
+
+    private companion object {
+        val UNCERTAIN_RETRY_AFTER = 60.seconds
     }
 }
