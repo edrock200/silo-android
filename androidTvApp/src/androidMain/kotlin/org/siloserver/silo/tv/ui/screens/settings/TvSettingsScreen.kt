@@ -3069,7 +3069,7 @@ private val NextUpPromptOptions = listOf(0, 10, 30, 60, 120)
 private val HevcLevelOverrideOptions = listOf(0, 150, 153, 156, 180, 183, 186)
 
 private fun hevcLevelOverrideLabel(level: Int): String =
-    if (level <= 0) "Auto" else "Level %d.%d".format(level / 30, (level % 30) / 3)
+    if (level <= 0) "Auto" else "Level ${level / 30}.${(level % 30) / 3}"
 
 private fun resumeRewindLabel(seconds: Int): String =
     if (seconds <= 0) "Off" else "${seconds}s"
