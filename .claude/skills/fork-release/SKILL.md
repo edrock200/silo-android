@@ -1,13 +1,15 @@
 ---
 name: fork-release
-description: Sync this fork (edrock200/silo-android) with upstream Silo-Server/silo-android, reapply the HEVC Level Override patch, build optimized release APKs for phone and TV versioned <public>-hevc, and publish them with a changelog to the apk-builds branch. Use when asked to update, rebuild, or release the fork's APKs.
+description: Sync this fork (edrock200/silo-android) with upstream Silo-Server/silo-android, reapply the fork patches (HEVC Level Override, in-app trailers, Trailer button), build optimized release APKs for phone and TV versioned <public>-hevc, and publish them with a changelog to the apk-builds branch. Use when asked to update, rebuild, or release the fork's APKs.
 ---
 
 # Fork release: sync upstream, patch, build, publish
 
-This fork adds one feature on top of upstream: **HEVC Level Override**. It
-also carries a small build fix. Each release rebases those commits onto
-upstream `main` and ships optimized APKs for both apps.
+This fork adds three features on top of upstream: **HEVC Level Override**
+(TV: Settings → Playback → Streaming; phone: Settings → Playback → Decoder),
+**in-app YouTube trailers**, and a **Trailer button** next to Play. It also
+carries a small build fix. Each release rebases those commits onto upstream
+`main` and ships optimized APKs for both apps.
 
 ## What the fork patch touches
 
