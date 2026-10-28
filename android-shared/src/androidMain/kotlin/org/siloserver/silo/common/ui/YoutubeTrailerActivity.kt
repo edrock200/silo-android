@@ -26,7 +26,9 @@ import android.webkit.WebViewClient
  * Remote: OK / Play-Pause toggles, Left / Right seek 10 seconds, Back closes.
  * The activity closes itself when the trailer ends. If the owner blocks
  * embedding, the video is unavailable, or the player doesn't start within
- * [LOAD_TIMEOUT_MS], it hands the trailer to the YouTube app instead.
+ * [LOAD_TIMEOUT_MS] of the page loading, it hands the trailer to the YouTube
+ * app instead. An error after the trailer has started just closes the
+ * player: handing off mid-trailer would bring back YouTube's profile picker.
  */
 class YoutubeTrailerActivity : Activity() {
 
@@ -34,6 +36,7 @@ class YoutubeTrailerActivity : Activity() {
     private val handler = Handler(Looper.getMainLooper())
     private var ready = false
     private var handedOff = false
+    private var startedPlaying = false
     private lateinit var videoId: String
 
     private val loadTimeout = Runnable { if (!ready) handOffToYoutubeApp() }
@@ -72,13 +75,24 @@ class YoutubeTrailerActivity : Activity() {
                 view: WebView,
                 request: android.webkit.WebResourceRequest,
             ): Boolean = request.isForMainFrame
+
+            // Count the start-up allowance from when the page has loaded, not
+            // from onCreate, so a slow connection isn't mistaken for a broken
+            // player and handed off while the embed is about to start.
+            override fun onPageFinished(view: WebView, url: String?) {
+                if (!ready) {
+                    handler.removeCallbacks(loadTimeout)
+                    handler.postDelayed(loadTimeout, LOAD_TIMEOUT_MS)
+                }
+            }
         }
         view.addJavascriptInterface(Bridge(), "SiloTrailer")
         setContentView(view)
         // YouTube's embed refuses players without an HTTPS origin and referrer
         // (error 152/153), so the page is given one.
         view.loadDataWithBaseURL(EMBED_ORIGIN, playerHtml(videoId), "text/html", "utf-8", null)
-        handler.postDelayed(loadTimeout, LOAD_TIMEOUT_MS)
+        // Backstop in case the page itself never finishes loading.
+        handler.postDelayed(loadTimeout, PAGE_LOAD_TIMEOUT_MS)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
@@ -106,13 +120,14 @@ class YoutubeTrailerActivity : Activity() {
 
     override fun onPause() {
         super.onPause()
-        webView?.evaluateJavascript("player && player.pauseVideo()", null)
+        webView?.evaluateJavascript("siloPauseForBackground()", null)
         webView?.onPause()
     }
 
     override fun onResume() {
         super.onResume()
         webView?.onResume()
+        webView?.evaluateJavascript("siloResumeFromBackground()", null)
     }
 
     override fun onDestroy() {
@@ -151,14 +166,20 @@ class YoutubeTrailerActivity : Activity() {
         /** Embedding blocked (101/150), unavailable (100), or a player error. */
         @JavascriptInterface
         fun onError(@Suppress("UNUSED_PARAMETER") code: Int) {
-            handler.post { handOffToYoutubeApp() }
+            handler.post { if (startedPlaying) finish() else handOffToYoutubeApp() }
+        }
+
+        @JavascriptInterface
+        fun onPlaying() {
+            handler.post { startedPlaying = true }
         }
     }
 
     companion object {
         private const val EXTRA_VIDEO_ID = "org.siloserver.silo.extra.YOUTUBE_VIDEO_ID"
         private const val EMBED_ORIGIN = "https://www.siloserver.org"
-        private const val LOAD_TIMEOUT_MS = 15_000L
+        private const val LOAD_TIMEOUT_MS = 20_000L
+        private const val PAGE_LOAD_TIMEOUT_MS = 45_000L
         private val VIDEO_ID = Regex("^[A-Za-z0-9_-]{6,20}$")
 
         /** False when [videoId] isn't a YouTube video ID this player accepts. */
@@ -180,6 +201,16 @@ class YoutubeTrailerActivity : Activity() {
             <div id="player"></div>
             <script>
               var player = null;
+              var siloWasPlaying = false;
+              function siloPauseForBackground() {
+                if (!player) return;
+                siloWasPlaying = player.getPlayerState() === YT.PlayerState.PLAYING;
+                player.pauseVideo();
+              }
+              function siloResumeFromBackground() {
+                if (player && siloWasPlaying) player.playVideo();
+                siloWasPlaying = false;
+              }
               function siloToggle() {
                 if (!player) return;
                 if (player.getPlayerState() === YT.PlayerState.PLAYING) player.pauseVideo();
@@ -201,6 +232,7 @@ class YoutubeTrailerActivity : Activity() {
                   events: {
                     onReady: function (e) { SiloTrailer.onReady(); e.target.playVideo(); },
                     onStateChange: function (e) {
+                      if (e.data === YT.PlayerState.PLAYING) SiloTrailer.onPlaying();
                       if (e.data === YT.PlayerState.ENDED) SiloTrailer.onEnded();
                     },
                     onError: function (e) { SiloTrailer.onError(e.data); }
