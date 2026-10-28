@@ -2680,7 +2680,7 @@ fun TvPlayerScreen(
                     TvAiTranslateDialog(
                         aiState = aiTranslate,
                         subtitleSources = translatableSubtitleSources,
-                        audioSources = state.audioTracks,
+                        audioSources = viewModel.aiAudioSources(),
                         defaultTargetLanguage = state.preferredTextLanguage
                             ?.takeIf { it.isNotBlank() } ?: "en",
                         onSubmit = viewModel::submitAiTranslate,
