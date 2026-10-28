@@ -368,7 +368,7 @@ fun PlaybackEpisodesSection(
 // HEVC level override, normalized as level x 30 (0 = report the decoder's own).
 private val hevcLevelOverrideOptions = listOf(0, 150, 153, 156, 180, 183, 186)
 private fun hevcLevelOverrideLabel(level: Int) =
-    if (level <= 0) "Auto" else "Level %d.%d".format(level / 30, (level % 30) / 3)
+    if (level <= 0) "Auto" else "Level ${level / 30}.${(level % 30) / 3}"
 
 /**
  * Playback → Decoder: the HEVC level this device reports to the server. See
