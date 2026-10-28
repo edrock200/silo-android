@@ -77,7 +77,7 @@ branch. These links always serve the newest fork build:
 They don't install over the official Play Store or GitHub release
 builds, which use a different signing key, so uninstall those first.
 
-- **HEVC Level Override:** Settings → Streaming → HEVC Level Override (TV) or
+- **HEVC Level Override:** Settings → Playback → Streaming → HEVC Level Override (TV) or
   Settings → Playback → Decoder (phone). Choose Level 6.2 for files tagged
   HEVC Main 10 level 6.2.
 - **Trailers:** press **Trailer** next to Play, or pick one from the
