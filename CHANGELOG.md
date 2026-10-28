@@ -23,6 +23,17 @@ Fixes from a code review of the fork's changes. No upstream changes.
   button moves into More ("Play Trailer") so the button row isn't crowded.
 - **Docs:** the TV setting is under Settings → Playback → Streaming, not
   Settings → Streaming.
+- **AI subtitles (fixes to upstream code, found in a code review):**
+  - TV "From audio" now transcribes the audio track you pick. When the
+    server remuxed or converted the video, the TV always sent the first audio
+    track, so a dubbed track was transcribed in the original language.
+  - A brief network drop while starting a translation no longer blocks that
+    translation until the app restarts. You can retry after a minute; the
+    server reuses the job if it had already started.
+  - On TV, if the "subtitle ready" live update is missed, Silo refreshes the
+    subtitle list after a few seconds, so a finished translation shows up.
+  - Phone no longer runs an extra English → English translation (using AI
+    credit) when the audio is tagged "eng" and the target is English.
 
 ## 1.0.0-hevc (build 27, rebuilt) — 2026-10-28
 
