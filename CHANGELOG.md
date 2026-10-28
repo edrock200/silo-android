@@ -6,6 +6,19 @@ button. Fork builds use the upstream public version with a `-hevc` suffix.
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 27, rebuilt) — 2026-10-28 (evening sync)
+
+Based on upstream `main` at `bda6cbdd7`. No new public upstream build, so
+the version is unchanged. Fork changes are carried over unchanged.
+
+### Upstream changes since the previous build
+
+- feat(sections): cap Home and library rows at 20 cards and open each row as a full page (#688)
+- fix(tv): keep match-content output at or above the video's resolution (#713)
+- fix(catalog): build boolean filter rules as JSON booleans (#703)
+- fix(tv): let the D-pad leave the filter value search field (#704)
+- fix(tv): say when marking a card watched fails (#706)
+
 ## 1.0.0-hevc (build 27, rebuilt) — 2026-10-28 (afternoon sync)
 
 Based on upstream `main` at `4d489a823`. No new public upstream build, so
