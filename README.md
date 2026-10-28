@@ -3,7 +3,7 @@
 Optimized release builds (R8 + baseline profile) of the
 [edrock200/silo-android](https://github.com/edrock200/silo-android) fork:
 upstream Silo Android 1.0.0, newer upstream fixes, an **HEVC Level Override**
-setting, **in-app YouTube trailers**, and a **Trailer button** next to Play. Built from branch `feat/hevc-level-override-v5` at commit 5bd0b7cbd.
+setting, **in-app YouTube trailers**, and a **Trailer button** next to Play. Built from branch `feat/hevc-level-override-v5` at commit af1be0198.
 See [CHANGELOG.md](CHANGELOG.md).
 
 | File | Device | Version | Version code |
@@ -32,7 +32,7 @@ then allow APK installs from Downloader when prompted.
 
 ## Use the HEVC Level Override
 
-- TV: Settings → Streaming → **HEVC Level Override**
+- TV: Settings → Playback → Streaming → **HEVC Level Override**
 - Phone: Settings → Playback → Decoder → **HEVC Level Override**
 
 Choose **Level 6.2** to direct play files tagged HEVC Main 10 level 6.2. Auto

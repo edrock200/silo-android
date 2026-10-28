@@ -6,6 +6,35 @@ button. Fork builds use the upstream public version with a `-hevc` suffix.
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 27, rebuilt) — 2026-10-28 (review fixes)
+
+Fixes from a code review of the fork's changes. No upstream changes.
+
+- **Trailer player:** if YouTube reports an error after a trailer has
+  started, the player now closes instead of opening the YouTube app (which
+  brought back its profile picker). The start-up allowance now counts from
+  when the player page loads (20 seconds, with a 45-second backstop), so slow
+  connections no longer get sent to the YouTube app. A trailer paused by an
+  interruption (notification shade, multi-window) resumes when you return.
+- **HEVC Level Override:** the setting keeps working after a failed settings
+  read instead of freezing at its last value until the app restarts. Level
+  labels no longer change digits in some languages.
+- **Phone:** when a title can be downloaded and has a More menu, the Trailer
+  button moves into More ("Play Trailer") so the button row isn't crowded.
+- **Docs:** the TV setting is under Settings → Playback → Streaming, not
+  Settings → Streaming.
+- **AI subtitles (fixes to upstream code, found in a code review):**
+  - TV "From audio" now transcribes the audio track you pick. When the
+    server remuxed or converted the video, the TV always sent the first audio
+    track, so a dubbed track was transcribed in the original language.
+  - A brief network drop while starting a translation no longer blocks that
+    translation until the app restarts. You can retry after a minute; the
+    server reuses the job if it had already started.
+  - On TV, if the "subtitle ready" live update is missed, Silo refreshes the
+    subtitle list after a few seconds, so a finished translation shows up.
+  - Phone no longer runs an extra English → English translation (using AI
+    credit) when the audio is tagged "eng" and the target is English.
+
 ## 1.0.0-hevc (build 27, rebuilt) — 2026-10-28
 
 Based on upstream `main` at `548617cf6`. No new public upstream build, so
@@ -61,7 +90,7 @@ Based on upstream `main` at `51e480a4`, 23 commits after the public
   5.1, 5.2, 6.0, 6.1 or 6.2) to the server so those files direct play, like
   Plex's "ignore level" option. Files that truly exceed the decoder may
   stutter or fail.
-  - TV: Settings → Streaming → HEVC Level Override.
+  - TV: Settings → Playback → Streaming → HEVC Level Override.
   - Phone: Settings → Playback → Decoder → HEVC Level Override.
   - Stored per profile on the device. Default is Auto, which reports what
     the decoder reports.
