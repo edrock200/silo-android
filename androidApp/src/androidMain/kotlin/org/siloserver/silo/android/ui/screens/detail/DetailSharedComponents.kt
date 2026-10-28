@@ -1347,12 +1347,31 @@ fun HeroActionStack(
             label = primaryLabel,
             onClick = { if (onPlayFromBeginning != null) showResumeDialog = true else onPlay() },
         )
+        // Fork: six equal columns are too tight on a narrow phone, so with
+        // Download and More both present the Trailer action moves into More.
+        val trailerInRow = onPlayTrailer != null && !(downloadSlot != null && overflow != null)
+        val overflowMenu: (@Composable (dismiss: () -> Unit) -> Unit)? =
+            if (onPlayTrailer != null && !trailerInRow && overflow != null) {
+                { dismiss ->
+                    SiloDropdownMenuItem(
+                        text = { Text("Play Trailer") },
+                        leadingIcon = { Icon(Icons.Filled.OndemandVideo, contentDescription = null) },
+                        onClick = {
+                            dismiss()
+                            onPlayTrailer()
+                        },
+                    )
+                    overflow(dismiss)
+                }
+            } else {
+                overflow
+            }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.Top,
         ) {
-            if (onPlayTrailer != null) {
+            if (trailerInRow && onPlayTrailer != null) {
                 CircleActionButton(
                     icon = Icons.Filled.OndemandVideo,
                     activeIcon = Icons.Filled.OndemandVideo,
@@ -1400,9 +1419,9 @@ fun HeroActionStack(
                     Text("Download", fontSize = 10.sp, fontWeight = FontWeight.Medium, color = Color.White.copy(alpha = 0.60f))
                 }
             }
-            if (overflow != null) {
+            if (overflowMenu != null) {
                 CircleOverflowButton(
-                    menuContent = overflow,
+                    menuContent = overflowMenu,
                     modifier = Modifier.weight(1f),
                 )
             }
