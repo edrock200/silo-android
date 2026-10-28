@@ -50,6 +50,14 @@ carries a small build fix. Each release rebases those commits onto upstream
   `rememberHeroTrailerAction()` in `TrailersRail.kt` from
   `MovieDetailContent.kt` and `SeriesDetailContent.kt`.
 
+- Fixes to upstream AI subtitle code (drop each one if upstream fixes it,
+  and resolve rebase conflicts in upstream's favor when it does):
+  `TvPlayerViewModel.aiAudioSources()` (TV "From audio" uses server audio
+  ordinals) and the AI-completion replan fallback in `refreshSubtitles()`;
+  the 60-second cooldown on the uncertain-request fence in
+  `shared/.../network/apiv2/SubtitleAiCreateV2Api.kt`; normalized language
+  match in phone `SubtitleAiSupport.transcribeKindFor()`.
+
 ## Steps
 
 1. **Sync.** `git remote add upstream https://github.com/Silo-Server/silo-android`
