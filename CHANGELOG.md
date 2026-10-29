@@ -6,6 +6,17 @@ button. Fork builds use the upstream public version with a `-hevc` suffix.
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 27, rebuilt) — 2026-10-29
+
+Based on upstream `main` at `3cecc7a66`. No new public upstream build, so
+the version is unchanged. Fork changes are carried over unchanged.
+
+### Upstream changes since the previous build
+
+- fix(tv): start Up Next episodes at 0:00 instead of the previous episode's position (#718)
+- fix(tv): run a phone's handoff at the TV's own server address (#716)
+- fix(tv): advertise the server's identity on TVs not paired from a phone (#717)
+
 ## 1.0.0-hevc (build 27, rebuilt) — 2026-10-28 (evening sync)
 
 Based on upstream `main` at `bda6cbdd7`. No new public upstream build, so
