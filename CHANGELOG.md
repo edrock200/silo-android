@@ -6,6 +6,21 @@ button. Fork builds use the upstream public version with a `-hevc` suffix.
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 28) — 2026-10-30
+
+Based on upstream `main` at `8fff98ba3`, after the public 1.0.0 build 28
+(`v1.0.0-beta.28`). Fork changes are carried over. Upstream's AI subtitle
+session change (#726) and the fork's 60-second retry for uncertain
+translation requests touched the same code; both are kept.
+
+### Upstream changes since the previous build
+
+- fix(player): attach AI subtitle jobs to the playback session (#726)
+- fix(player): show the AI translate menu as a corner card in landscape (#728)
+- fix(player): wait 30 seconds before following a network change mid-playback (#729)
+- fix(tv): keep focus reachable after scrolling Search results (#736)
+- docs: make the beta Downloader codes the default until a store release (#724)
+
 ## 1.0.0-hevc (build 27, rebuilt) — 2026-10-29
 
 Based on upstream `main` at `3cecc7a66`. No new public upstream build, so
