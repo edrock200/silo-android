@@ -7,9 +7,9 @@ description: Sync this fork (edrock200/silo-android) with upstream Silo-Server/s
 
 This fork adds three features on top of upstream: **HEVC Level Override**
 (TV: Settings → Playback → Streaming; phone: Settings → Playback → Decoder),
-**in-app YouTube trailers**, and a **Trailer button** next to Play. It also
-carries a small build fix. Each release rebases those commits onto upstream
-`main` and ships optimized APKs for both apps.
+**in-app YouTube trailers**, and a **Trailer button** next to Play. Each
+release rebases those commits onto upstream `main` and ships optimized APKs
+for both apps.
 
 ## What the fork patch touches
 
@@ -29,11 +29,10 @@ carries a small build fix. Each release rebases those commits onto upstream
 - UI: TV `TvSettingsScreen.kt`/`TvSettingsViewModel.kt` (Streaming group +
   picker); phone `PlaybackSettings.kt` (`PlaybackDecoderSection`),
   `SettingsPages.kt`, `SettingsViewModel.kt`.
-- `gradle/verification-metadata.xml`: `also-trust` hashes for regenerated
-  Plugin Portal marker POMs (kotlin.android, kotlin.plugin.compose,
-  kotlin.plugin.serialization, org.jetbrains.compose). Ask the user before
-  trusting any new hash, and check that the marker only points to the
-  matching artifact first.
+- `gradle/verification-metadata.xml`: no fork changes. Upstream adopted the
+  Plugin Portal marker-POM hashes the fork used to carry (#757). If dependency
+  verification fails again, ask the user before trusting any new hash, and
+  check that the marker only points to the matching artifact first.
 
 - In-app YouTube trailers: `android-shared/.../ui/YoutubeTrailerActivity.kt`
   (WebView + YouTube IFrame API, served from base URL
