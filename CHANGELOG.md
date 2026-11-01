@@ -6,6 +6,34 @@ button. Fork builds use the upstream public version with a `-hevc` suffix.
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 28, rebuilt) — 2026-11-01
+
+Based on upstream `main` at `77e316ff5`. No new public upstream build, so
+the version is unchanged. Upstream now trusts the same Gradle Plugin Portal
+marker POMs the fork patched (#757), so the fork's build fix is retired.
+The other fork changes are carried over unchanged.
+
+### Upstream changes since the previous build
+
+- feat(tv): tell nearby phones a TV is signing in, in release builds too (#747)
+- fix(tv): ask to open a profile automatically the way Apple TV does (#762)
+- fix(tv): let Sign Out keep or remove the server, as on Apple TV (#764)
+- fix(tv): give the server address screen Apple TV's Advanced options and errors (#758)
+- fix(tv): match Apple TV's sign-in states for new, declined and wrong-password (#754)
+- fix(tv): forget a server the TV never signed in to when you change server (#759)
+- fix(tv): outline the username field when the username is missing (#760)
+- fix(tv): say "Could not reach a Silo server" when the address answers an HTTP error with no message (#771)
+- fix(tv): name the TV by its device name when it asks to sign in (#746)
+- fix(tv): word the phone setup panel like Apple TV's (#761)
+- fix(tv): withdraw the sign-in request when a phone abandons setup (#752)
+- fix(tv): drop a silent phone after three minutes of phone setup (#748)
+- fix(pairing): stop the phone approving a TV that cancelled sign-in (#749)
+- fix(pairing): word phone setup failures for people, not the server (#753)
+- fix(pairing): say "tablet" on the TV setup card on a tablet (#755)
+- fix(player): offer skip for every marker occurrence (#694)
+- build: trust the Gradle Plugin Portal's own plugin marker POMs (#757)
+- docs(license): add a platform library exception to the AGPL (#772)
+
 ## 1.0.0-hevc (build 28, rebuilt) — 2026-10-31
 
 Based on upstream `main` at `76dee90ad`. No new public upstream build, so
