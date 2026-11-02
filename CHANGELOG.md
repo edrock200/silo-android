@@ -6,6 +6,19 @@ button. Fork builds use the upstream public version with a `-hevc` suffix.
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 28, rebuilt) — 2026-11-02
+
+Based on upstream `main` at `51d4f9013`. No new public upstream build, so
+the version is unchanged. Fork changes are carried over unchanged.
+
+### Upstream changes since the previous build
+
+- feat(box-sets): browse, open and search movie box sets (#646)
+- feat(playback): draw embedded subtitles from the stream and switch them without a remount (#770)
+- fix(player): don't offer or auto-pick subtitles the server can't show (#776)
+- fix(tv): outline focused cards in white with a small lift, as on tvOS (#781)
+- fix(tv): read only the Watch Next rows instead of all of Home (#775)
+
 ## 1.0.0-hevc (build 28, rebuilt) — 2026-11-01 (morning sync)
 
 Based on upstream `main` at `864cd1d6f`. No new public upstream build, so
