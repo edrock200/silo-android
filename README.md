@@ -3,7 +3,7 @@
 Optimized release builds (R8 + baseline profile) of the
 [edrock200/silo-android](https://github.com/edrock200/silo-android) fork:
 upstream Silo Android 1.0.0, newer upstream fixes, an **HEVC Level Override**
-setting, **in-app YouTube trailers**, and a **Trailer button** next to Play. Built from branch `feat/hevc-level-override-v16` at commit f0e45e9f0.
+setting, **in-app YouTube trailers**, and a **Trailer button** next to Play. Built from branch `feat/hevc-level-override-v17` at commit 2b275b854.
 See [CHANGELOG.md](CHANGELOG.md).
 
 | File | Device | Version | Version code |
