@@ -6,6 +6,19 @@ button. Fork builds use the upstream public version with a `-hevc` suffix.
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 28, rebuilt) — 2026-11-04 (afternoon sync)
+
+Based on upstream `main` at `623bb3513`. No new public upstream build, so
+the version is unchanged. Fork changes are carried over unchanged; the HEVC
+Level Override now follows upstream's per-account settings files like every
+other local playback setting.
+
+### Upstream changes since the previous build
+
+- feat(accounts): sign in to more than one account per server (#795)
+- fix(tv): keep focus on a Continue Watching card when its next episode replaces it (#803)
+- fix(tv): keep the marquee detail line whole while it fades (#805)
+
 ## 1.0.0-hevc (build 28, rebuilt) — 2026-11-04
 
 Based on upstream `main` at `64ae5f08c`. No new public upstream build, so
