@@ -6,6 +6,18 @@ button. Fork builds use the upstream public version with a `-hevc` suffix.
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 29, rebuilt) — 2026-11-05 (microphone)
+
+### Added in this fork
+
+- **TV asks for microphone access for voice typing in Search.** The search
+  box's voice input comes from the on-screen keyboard's mic key, and some
+  Android TV keyboards only listen when the app holding the text field has
+  microphone access. Silo didn't declare it, so the mic key did nothing. The
+  TV app now declares the microphone (optional hardware, so TVs without one
+  can still install it) and asks once the first time you open Search. If you
+  said no, turn it on under Android Settings → Apps → Silo → Permissions.
+
 ## 1.0.0-hevc (build 29) — 2026-11-05
 
 Based on upstream `main` at `d65b27cec`, after the public 1.0.0 build 29
