@@ -6,6 +6,19 @@ button. Fork builds use the upstream public version with a `-hevc` suffix.
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 29) — 2026-11-05
+
+Based on upstream `main` at `d65b27cec`, after the public 1.0.0 build 29
+(`v1.0.0-beta.29`). Fork changes are carried over unchanged.
+
+### Upstream changes since the previous build
+
+- fix(playback): allow audio passthrough on Android 9 and older HDMI devices (#778)
+- fix(tv): move the series page to the next episode after you finish one (#802)
+- fix(tv): make the remote's Stop key leave the player (#809)
+- refactor(phone): show Watchlist, Favorites and History in the library grid (#808)
+- test(tv): wait for view model work to stop before resetting Main (#806)
+
 ## 1.0.0-hevc (build 28, rebuilt) — 2026-11-04 (afternoon sync)
 
 Based on upstream `main` at `623bb3513`. No new public upstream build, so
