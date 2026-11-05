@@ -57,6 +57,11 @@ for both apps.
   `shared/.../network/apiv2/SubtitleAiCreateV2Api.kt`; normalized language
   match in phone `SubtitleAiSupport.transcribeKindFor()`.
 
+- TV microphone permission for keyboard voice typing in Search:
+  `RECORD_AUDIO` + optional `android.hardware.microphone` in the TV manifest,
+  and `RequestMicrophonePermissionOnce()` (`androidTvApp/.../search/TvMicrophonePermission.kt`)
+  called at the top of `TvSearchScreen`.
+
 ## Steps
 
 1. **Sync.** `git remote add upstream https://github.com/Silo-Server/silo-android`
