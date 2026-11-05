@@ -15,6 +15,13 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--
+        Fork: voice typing in Search. Some Android TV keyboards only listen
+        when the app holding the text field has microphone access. Optional
+        hardware, so TVs without a microphone can still install the app.
+    -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-feature android:name="android.hardware.microphone" android:required="false" />
     <uses-permission android:name="com.android.providers.tv.permission.WRITE_EPG_DATA" />
     <uses-permission android:name="com.android.providers.tv.permission.READ_EPG_DATA" />
 
