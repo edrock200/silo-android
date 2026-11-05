@@ -127,6 +127,7 @@ fun TvSearchScreen(
     viewModel: TvSearchViewModel = koinViewModel(),
     requestSearchViewModel: RequestSearchViewModel = koinViewModel(),
 ) {
+    RequestMicrophonePermissionOnce()
     val state by viewModel.uiState.collectAsState()
     OnViewerAccessChanged(koinInject<AccessChangeSignals>(), viewModel.accessChanges) { viewModel.refreshForAccessChange() }
     val requestState by requestSearchViewModel.uiState.collectAsState()
