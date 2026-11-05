@@ -6,6 +6,18 @@ button. Fork builds use the upstream public version with a `-hevc` suffix.
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 29, rebuilt) — 2026-11-05 (morning sync)
+
+Based on upstream `main` at `670f5ba0a`. No new public upstream build, so
+the version is unchanged. Fork changes are carried over unchanged.
+
+### Upstream changes since the previous build
+
+- feat(pairing): sign an Android TV in to several servers and accounts from a phone (#810)
+- feat(overlays): draw the combined resolution, HDR and audio poster badge (#816)
+- fix(tv): stop Home flashing the text title before its logo (#813)
+- fix(phone): move the cast bar beside the minimized Home control (#811)
+
 ## 1.0.0-hevc (build 29, rebuilt) — 2026-11-05 (microphone)
 
 ### Added in this fork
