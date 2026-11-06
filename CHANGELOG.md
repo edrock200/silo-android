@@ -6,6 +6,23 @@ button. Fork builds use the upstream public version with a `-hevc` suffix.
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 29, rebuilt) — 2026-11-06 (morning sync)
+
+Based on upstream `main` at `ee178d887`. No new public upstream build, so
+the version is unchanged. Fork changes are carried over unchanged. Upstream
+brought back an on-screen voice search button on TV (#830), which uses the
+system speech recognizer and needs no permission; the fork's microphone
+request stays for keyboards whose own mic key needs it.
+
+### Upstream changes since the previous build
+
+- feat(tv): bring back the voice search button on Android TV search (#830)
+- feat(requests): let users remove their own failed requests (#792)
+- fix(membership): show a dismissable dialog when an offline change isn't confirmed (#827)
+- fix(detail): show "Translating description…" for the shown episode on series pages (#822)
+- fix(phone): show which For You list is chosen in the pill row (#829)
+- fix(tv): close the audiobook Speed panel with Back (#705)
+
 ## 1.0.0-hevc (build 29, rebuilt) — 2026-11-06
 
 Based on upstream `main` at `e9861fa66`. No new public upstream build, so
