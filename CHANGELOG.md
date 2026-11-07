@@ -6,6 +6,20 @@ button. Fork builds use the upstream public version with a `-hevc` suffix.
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 29, rebuilt) — 2026-11-07 (live AI subtitles)
+
+### Added in this fork
+
+- **TV shows AI subtitles while they're being made.** An AI translation or
+  transcription takes several minutes to finish, and the TV used to show
+  nothing until the whole file was done, while the web player showed lines
+  within seconds. The server already streams the translated lines to the
+  player as it works, starting at the viewer's position; the Android app
+  ignored them. The TV player now draws those lines over the picture as they
+  arrive (showing "Translating subtitles…" until the first ones come), then
+  switches to the finished subtitle track when it's ready. The phone app
+  doesn't have this yet.
+
 ## 1.0.0-hevc (build 29, rebuilt) — 2026-11-06 (afternoon sync)
 
 Based on upstream `main` at `f13a2652a`. No new public upstream build, so
