@@ -61,6 +61,8 @@ adds three things to upstream Silo:
   embedded player instead of opening the YouTube app, whose "Who's watching?"
   profile picker dropped the video.
 - **Trailer button next to Play** on movie and series detail pages.
+- **Live AI subtitles on TV:** translated lines appear within seconds while an
+  AI translation runs, instead of only after the whole file is done.
 
 Fork builds are named after the upstream public version with a `-hevc`
 suffix, for example `1.0.0-hevc`. See [CHANGELOG.md](CHANGELOG.md).
