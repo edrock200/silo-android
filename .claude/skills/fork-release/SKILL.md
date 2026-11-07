@@ -62,6 +62,15 @@ for both apps.
   and `RequestMicrophonePermissionOnce()` (`androidTvApp/.../search/TvMicrophonePermission.kt`)
   called at the top of `TvSearchScreen`.
 
+- Live AI subtitles on TV: `shared/.../playback/PlaybackLiveSubtitles.kt`
+  (decodes `subtitle_translation_started|cues|completed|failed` realtime
+  events; test `PlaybackLiveSubtitlesTest`), `TvPlaybackRealtimeController`
+  (routes them), `TvPlayerViewModel.applyLiveSubtitleEvent` / `liveSubtitle` /
+  `clearLiveSubtitle` (cleared when the AI job poll finishes),
+  `TvLiveSubtitleOverlay.kt`, and two hooks in `TvPlayerScreen` (hide Media3's
+  subtitle view while live, draw the overlay). Drop it if upstream adds live
+  cues itself.
+
 ## Steps
 
 1. **Sync.** `git remote add upstream https://github.com/Silo-Server/silo-android`
