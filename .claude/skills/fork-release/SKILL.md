@@ -71,6 +71,22 @@ for both apps.
   subtitle view while live, draw the overlay). Drop it if upstream adds live
   cues itself.
 
+- Admin console (phone and TV): generic screens built from the bundled spec
+  `android-shared/src/androidMain/assets/admin/openapi-admin.json`, made by
+  `python3 -I scripts/admin-spec.py` from silo-server's
+  `contracts/api/v2/openapi.json` (operations under `/api/v2/admin` or marked
+  `x-silo-class: acting_admin`). Regenerate it when syncing if the server's
+  admin API changed. Engine in `shared/.../admin/` (`AdminSpec`,
+  `AdminCatalog`, `AdminForm`, `AdminDisplay`; test `AdminEngineTest`) and
+  `shared/.../network/apiv2/AdminV2Api.kt` (registered in `NetworkModule`).
+  `android-shared/.../common/admin/AdminConsoleViewModel.kt` (spec loader,
+  `AdminAccess`, the console's own back stack; test `AdminBundledSpecTest`)
+  and `common/di/AdminModule.kt` (added to both apps' Koin modules). Phone:
+  `screens/admin/AdminConsoleScreen.kt`, `Route.AdminConsole`,
+  `LocalAdminConsole` (provided in `AppNavigation`, read by `ProfileMenu`).
+  TV: `screens/admin/TvAdminConsoleScreen.kt`, `TvRoute.AdminConsole`,
+  `onOpenAdmin` + `showAdmin` in `TvMainShell`'s profile dropdown.
+
 ## Steps
 
 1. **Sync.** `git remote add upstream https://github.com/Silo-Server/silo-android`
