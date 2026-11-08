@@ -39,6 +39,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.SwitchAccount
+import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.Inbox
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Settings
@@ -224,6 +225,8 @@ fun TvMainShell(
     onPlayItem: (contentId: String, type: String?, resumePositionSeconds: Double?) -> Unit,
     /** Open the Watch Party hub. */
     onOpenWatchParty: () -> Unit,
+    /** Fork: open the admin console (administrator accounts only). */
+    onOpenAdmin: () -> Unit = {},
     // Plays the first pick of a shuffle started from a library screen.
     onPlayShuffle: (shuffle: org.siloserver.silo.model.shuffle.Shuffle, libraryId: Int?) -> Unit = { _, _ -> },
     onOpenPersonDetail: (personId: Long) -> Unit,
@@ -255,6 +258,17 @@ fun TvMainShell(
     // Settings → Experimental → Watch Party decides whether the entry shows.
     val watchPartyExposure: WatchPartyExposure = koinInject()
     val watchPartyEnabled by watchPartyExposure.enabled.collectAsState()
+    // Fork: the admin console shows for administrator accounts.
+    val adminAccess: org.siloserver.silo.common.admin.AdminAccess = koinInject()
+    val adminAvailability by produceState(
+        org.siloserver.silo.common.admin.AdminAvailability.Unknown,
+        activeServerEntry,
+        currentEntry?.destination?.route == TvMainRoute.Home.route,
+    ) {
+        value = runCatching { adminAccess.check() }.getOrDefault(org.siloserver.silo.common.admin.AdminAvailability.Unknown)
+    }
+    val adminVisible = adminAvailability == org.siloserver.silo.common.admin.AdminAvailability.Available ||
+        adminAvailability == org.siloserver.silo.common.admin.AdminAvailability.NeedsPrimaryProfile
 
     // The raw list of libraries visible to this profile on TV, sorted by the
     // server's sort order (ebook-like libraries filtered out by visibleOnTv).
@@ -1818,6 +1832,8 @@ fun TvMainShell(
                 onRequests = openRequests,
                 showWatchParty = watchPartyEnabled,
                 onWatchParty = closeMenuAnd(onOpenWatchParty),
+                showAdmin = adminVisible,
+                onAdmin = closeMenuAnd(onOpenAdmin),
                 onSettings = {
                     // Keep focus on the dropdown row through the route fade.
                     // TvSettingsScreen closes the menu only after its General
@@ -2068,6 +2084,8 @@ private fun TvProfileDropdown(
     onRequests: () -> Unit,
     showWatchParty: Boolean,
     onWatchParty: () -> Unit,
+    showAdmin: Boolean,
+    onAdmin: () -> Unit,
     onSettings: () -> Unit,
     onSignOut: () -> Unit,
     onDismiss: () -> Unit,
@@ -2118,6 +2136,14 @@ private fun TvProfileDropdown(
                 label = stringResource(CommonR.string.menu_profileMenu_watchParty),
                 icon = Icons.Filled.People,
                 onClick = onWatchParty,
+            )
+        }
+
+        if (showAdmin) {
+            ProfileDropdownRow(
+                label = "Admin",
+                icon = Icons.Filled.AdminPanelSettings,
+                onClick = onAdmin,
             )
         }
 

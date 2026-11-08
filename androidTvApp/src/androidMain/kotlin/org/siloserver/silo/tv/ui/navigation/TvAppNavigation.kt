@@ -1394,6 +1394,9 @@ fun TvAppNavigation(
                 onChangeAccount = {
                     navController.navigate(TvRoute.ChangeAccount().route) { launchSingleTop = true }
                 },
+                onOpenAdmin = {
+                    navController.navigate(TvRoute.AdminConsole.route) { launchSingleTop = true }
+                },
                 onSwitchProfile = {
                     scope.launch {
                         // Leave the main shell before clearing profile-scoped
@@ -1928,6 +1931,20 @@ fun TvAppNavigation(
             // SavedStateHandle, so the screen needs no explicit args here.
             TvAudiobookPlayerScreen(
                 onExit = { navController.popBackStack() },
+            )
+        }
+
+        composable(TvRoute.AdminConsole.route) {
+            org.siloserver.silo.tv.ui.screens.admin.TvAdminConsoleScreen(
+                onClose = { navController.popBackStack() },
+                onSwitchProfile = {
+                    scope.launch {
+                        navController.navigate(TvRoute.ProfileSelection.route) {
+                            popUpTo(TvRoute.Main.route) { inclusive = true }
+                        }
+                        activeProfileReset.clearActiveProfile()
+                    }
+                },
             )
         }
 
