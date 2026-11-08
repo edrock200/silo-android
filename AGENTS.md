@@ -138,7 +138,9 @@ above the decoder's advertised level direct play. It also plays YouTube
 trailers inside Silo (`YoutubeTrailerActivity`, YouTube's embedded player)
 instead of handing them to the YouTube app, whose profile picker dropped the
 video, and adds a Trailer button next to Play on movie and series detail
-pages. Fork builds are versioned
+pages. By the fork owner's decision it also adds an **admin console** on
+phone and TV (profile menu → Admin, administrator accounts only), which
+overrides the "no admin surfaces" rule above for this fork. Fork builds are versioned
 `<upstream public version>-hevc` and listed in `CHANGELOG.md`; optimized
 release APKs are published on the `apk-builds` branch.
 
