@@ -49,10 +49,10 @@ Android 7.0 and 7.1 (API 24/25) are supported on both phone and Android TV. Vide
 
 ## Install APKs
 
-### This fork (HEVC Level Override and trailers)
+### This fork (HEVC Level Override, trailers and admin console)
 
 This fork, [edrock200/silo-android](https://github.com/edrock200/silo-android),
-adds three things to upstream Silo:
+adds these to upstream Silo:
 
 - **HEVC Level Override:** files tagged above the decoder's advertised HEVC
   level (for example Main 10 level 6.2 on an NVIDIA Shield) direct play
@@ -63,6 +63,11 @@ adds three things to upstream Silo:
 - **Trailer button next to Play** on movie and series detail pages.
 - **Live AI subtitles on TV:** translated lines appear within seconds while an
   AI translation runs, instead of only after the whole file is done.
+- **Admin console on phone and TV:** administrator accounts get the web
+  admin's controls in the app: now playing, requests, tasks, scans, logs,
+  users, invitations, access groups, devices, API keys, libraries,
+  collections, metadata, subtitles, settings, plugins, notifications and
+  maintenance.
 
 Fork builds are named after the upstream public version with a `-hevc`
 suffix, for example `1.0.0-hevc`. See [CHANGELOG.md](CHANGELOG.md).
@@ -88,6 +93,13 @@ builds, which use a different signing key, so uninstall those first.
   teaser. In the YouTube player, OK / Play-Pause pauses and resumes, Left /
   Right skip 10 seconds, and Back closes. If a trailer's owner blocks playback
   outside YouTube, Silo opens the YouTube app instead. YouTube may show ads.
+- **Admin console:** profile menu → **Admin** (shown for administrator
+  accounts only). The server accepts admin changes only from the account's
+  main profile, so switch to it first. Shortcuts cover the daily jobs; the
+  four groups (Activity, People, Media, Server) reach every admin operation
+  the server documents. Lists open items, items list what you can do to
+  them, edits load the current values first, and deletes, resets and
+  restarts ask before they run.
 
 ### Upstream builds
 
@@ -110,6 +122,7 @@ A condensed tour. For the exhaustive, per-feature checklist (with phone/TV cover
 - **Adaptive delivery** — the server picks **Direct Play**, **Remux**, or **Transcode** from the device's real capabilities; the client can also fall back to transcode at runtime if a track turns out to be undecodable (e.g. an AV receiver is unplugged mid-stream).
 - **Deep capability detection** — enumerates hardware decoders (H.264, HEVC, AV1, VP9, **Dolby Vision** profiles 5/7/8), panel HDR (HDR10, HDR10+, HLG, DV), and audio-sink passthrough (**E-AC3 JOC/Atmos, TrueHD, DTS-HD**); an optional bundled **FFmpeg** audio decoder fills gaps for lossless codecs.
 - **HEVC Level Override** (this fork) — reports a user-chosen HEVC level (up to 6.2) to the server so over-tagged files direct play instead of transcoding.
+- **Admin console** (this fork) — every server admin control, on phone and TV, for administrator accounts.
 - **In-app YouTube trailers** (this fork) — trailers play in Silo with YouTube's embedded player, skipping YouTube's profile picker; falls back to the YouTube app when a trailer can't be embedded. A **Trailer** button next to Play starts the main trailer.
 - **Quality-of-life** — staged playback buffering, per-content **refresh-rate matching** (phone), HDR toggle, intro auto-skip, chapters, sleep timer, playback speed, configurable video gravity (fit/fill/stretch).
 - **Tracks & subtitles** — audio-track switching (incl. mid-stream), subtitle selection with **styling, position, and sync offset**, plus a subtitle suite: provider **search & download** and **AI transcription/translation** with quota tracking.
