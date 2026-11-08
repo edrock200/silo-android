@@ -3,7 +3,9 @@
 Optimized release builds (R8 + baseline profile) of the
 [edrock200/silo-android](https://github.com/edrock200/silo-android) fork:
 upstream Silo Android 1.0.0, newer upstream fixes, an **HEVC Level Override**
-setting, **in-app YouTube trailers**, and a **Trailer button** next to Play. Built from branch `feat/hevc-level-override-v26` at commit d2f9c26a1.
+setting, **in-app YouTube trailers**, a **Trailer button** next to Play, live AI
+subtitles on TV, and an **admin console** for administrator accounts. Built from
+branch `feat/hevc-level-override-v27` at commit 3792ac473.
 See [CHANGELOG.md](CHANGELOG.md).
 
 | File | Device | Version | Version code |
@@ -29,6 +31,12 @@ then allow APK installs from Downloader when prompted.
   as `org.siloserver.silo` and update earlier builds from this branch in place.
 - They can't install over the official Play Store or GitHub release builds,
   which use a different key. Uninstall those first; you'll need to sign in again.
+
+## Use the admin console
+
+Profile menu → **Admin** (administrator accounts only, on the account's main
+profile). Dashboard and now playing, Requests, Tasks and scans, and Logs are
+hand-built; the four groups below them reach every other admin control.
 
 ## Use the HEVC Level Override
 
