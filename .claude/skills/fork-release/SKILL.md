@@ -86,6 +86,17 @@ for both apps.
   `LocalAdminConsole` (provided in `AppNavigation`, read by `ProfileMenu`).
   TV: `screens/admin/TvAdminConsoleScreen.kt`, `TvRoute.AdminConsole`,
   `onOpenAdmin` + `showAdmin` in `TvMainShell`'s profile dropdown.
+- Hand-built admin screens (owner decision: hand built and kept up to date
+  with the server): dashboard + now playing, request moderation, tasks and
+  scans, logs. Typed models in `shared/.../admin/AdminModels.kt`; the
+  operation ids they call in `AdminOps`, `AdminService` and the four view
+  models in `android-shared/.../common/admin/AdminScreensViewModels.kt`;
+  labels in `AdminPresentation.kt` (`AdminText`). Phone UI
+  `screens/admin/AdminHandBuiltScreens.kt`; TV UI
+  `screens/admin/TvAdminHandBuiltScreens.kt` (focus via
+  `ReclaimPageFocus`, never `runCatching { requestFocus() }`).
+  `AdminHandBuiltContractTest` checks every operation, field, query param
+  and request body these screens use against the bundled spec.
 
 ## Steps
 
@@ -93,6 +104,26 @@ for both apps.
    (public, so anonymous fetch works), then
    `git fetch --depth=200 upstream main:refs/remotes/upstream/main`. If
    nothing is new since the last release, stop.
+   **Admin API.** Also refresh the server: in the read-only clone
+   `/home/user/silo-server` (or `git clone --depth=1
+   https://github.com/Silo-Server/silo-server`), `git pull`, then run
+   `python3 -I scripts/admin-spec.py <silo-server>/contracts/api/v2/openapi.json`
+   in this repo. If the asset changed:
+   - run `./gradlew :android-shared:testDebugUnitTest --tests 'org.siloserver.silo.common.admin.*'`
+     and `:shared:testDebugUnitTest --tests 'org.siloserver.silo.admin.*'`;
+   - when `AdminHandBuiltContractTest` fails, it names the operation or field
+     that changed. Update the model in `AdminModels.kt`, the view model and
+     both screens to match (look at the server's handler under
+     `internal/apiv2/admin_*.go` and the web admin page under
+     `web/src/pages/Admin*.tsx` for the new meaning), and keep the test's
+     expectations in step;
+   - when the server adds an admin feature the hand-built screens should
+     show (a new dashboard number, a new request action, a new log filter),
+     add it to both phone and TV, and note it in the changelog;
+   - the generic console picks up everything else from the new asset with
+     no code change.
+   A spec change alone is a reason to publish a build even when upstream
+   Android has nothing new.
 2. **Rebase** the fork commits onto `upstream/main` and push them to a **new**
    branch, `feat/hevc-level-override-vN`. Force-pushing an existing branch is
    blocked in this environment.
