@@ -95,7 +95,8 @@ builds, which use a different signing key, so uninstall those first.
   outside YouTube, Silo opens the YouTube app instead. YouTube may show ads.
 - **Admin console:** profile menu → **Admin** (shown for administrator
   accounts only). The server accepts admin changes only from the account's
-  main profile, so switch to it first. Shortcuts cover the daily jobs; the
+  main profile, so switch to it first. Hand-built screens cover the daily
+  jobs (dashboard and now playing, requests, tasks and scans, logs); the
   four groups (Activity, People, Media, Server) reach every admin operation
   the server documents. Lists open items, items list what you can do to
   them, edits load the current values first, and deletes, resets and

@@ -15,13 +15,26 @@ APKs are on the
   offers admins. It opens on shortcuts (now playing, pending requests,
   scheduled tasks, library scan, libraries, server stats and status, logs,
   users) and four groups: Activity & requests, People & access, Media &
-  libraries, and Server setup. Together they reach all 435 admin operations
+  libraries, and Server setup. Together they reach all 471 admin operations
   the server documents. Lists page through results; each item shows its
   details and what you can do to it (approve, run, edit, delete). Edits
   start from the current values, and anything that deletes, resets or
   restarts asks first. The server accepts admin changes only from the
   account's main profile, so the console asks you to switch if you're on
   another one.
+- **Hand-built admin screens for the daily jobs**, on phone and TV:
+  - **Dashboard:** server health and uptime, errors and warnings in the
+    last day, a restart button, library numbers, CPU, memory, GPU and disk
+    use, and everyone watching right now, with direct play or transcode
+    details. Pause, resume, message or stop anyone's playback.
+  - **Requests:** needs approval, in progress, failed and done, with counts
+    and posters. Approve, decline with a reason, retry a failure, or cancel.
+  - **Tasks and scans:** scan every library or one, cancel running scans,
+    and run or cancel any scheduled task, with live progress.
+  - **Logs:** the server log by level with search, and the admin audit
+    trail.
+  These screens are checked against the server's admin API at every sync, so
+  they're updated when the server changes.
 
 ## 1.0.0-hevc (build 29, rebuilt) — 2026-11-08
 
