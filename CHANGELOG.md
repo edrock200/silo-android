@@ -6,6 +6,20 @@ button. Fork builds use the upstream public version with a `-hevc` suffix.
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 29, rebuilt) — 2026-11-08
+
+Based on upstream `main` at `93de7e0c4`. No new public upstream build, so
+the version is unchanged. Fork changes are carried over unchanged.
+
+### Upstream changes since the previous build
+
+- perf(tv): cut startup and marquee fade jank on Android TV (#853)
+- fix(tv): open the series episode rail on the next-up episode (#851)
+- fix(tv): show Play, not Resume, after a title is marked watched (#845)
+- fix(tv): keep the TV layout left to right in right-to-left languages (#833)
+- fix(tv): draw the top-bar Silo wordmark as a vector (#849)
+- test(tv): match the episode rail guard to its new centering effect (#852)
+
 ## 1.0.0-hevc (build 29, rebuilt) — 2026-11-07 (live AI subtitles)
 
 ### Added in this fork
