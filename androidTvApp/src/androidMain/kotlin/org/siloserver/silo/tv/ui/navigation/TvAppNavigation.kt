@@ -1447,6 +1447,9 @@ fun TvAppNavigation(
                 onChangeAccount = {
                     navController.navigate(TvRoute.ChangeAccount().route) { launchSingleTop = true }
                 },
+                onOpenAdmin = {
+                    navController.navigate(TvRoute.AdminConsole.route) { launchSingleTop = true }
+                },
                 // The profile menu's Add Profile, offered while the open
                 // account has one profile. Household management acts as the
                 // account's primary profile, as the picker's Add does, and
@@ -2008,6 +2011,20 @@ fun TvAppNavigation(
             // SavedStateHandle, so the screen needs no explicit args here.
             TvAudiobookPlayerScreen(
                 onExit = { navController.popBackStack() },
+            )
+        }
+
+        composable(TvRoute.AdminConsole.route) {
+            org.siloserver.silo.tv.ui.screens.admin.TvAdminConsoleScreen(
+                onClose = { navController.popBackStack() },
+                onSwitchProfile = {
+                    scope.launch {
+                        navController.navigate(TvRoute.ProfileSelection.route) {
+                            popUpTo(TvRoute.Main.route) { inclusive = true }
+                        }
+                        activeProfileReset.clearActiveProfile()
+                    }
+                },
             )
         }
 
