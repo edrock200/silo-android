@@ -1,10 +1,27 @@
 # Changelog — edrock200/silo-android fork
 
 This fork tracks [Silo-Server/silo-android](https://github.com/Silo-Server/silo-android)
-and adds an HEVC level override, in-app YouTube trailers, and a Trailer
-button. Fork builds use the upstream public version with a `-hevc` suffix.
+and adds an HEVC level override, in-app YouTube trailers, a Trailer
+button, live AI subtitles on TV, and an admin console. Fork builds use the upstream public version with a `-hevc` suffix.
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
+
+## 1.0.0-hevc (build 29, rebuilt) — 2026-11-08 (admin console)
+
+### Added in this fork
+
+- **Admin console on phone and TV.** Administrator accounts now have an
+  **Admin** item in the profile menu with the controls the Silo website
+  offers admins. It opens on shortcuts (now playing, pending requests,
+  scheduled tasks, library scan, libraries, server stats and status, logs,
+  users) and four groups: Activity & requests, People & access, Media &
+  libraries, and Server setup. Together they reach all 435 admin operations
+  the server documents. Lists page through results; each item shows its
+  details and what you can do to it (approve, run, edit, delete). Edits
+  start from the current values, and anything that deletes, resets or
+  restarts asks first. The server accepts admin changes only from the
+  account's main profile, so the console asks you to switch if you're on
+  another one.
 
 ## 1.0.0-hevc (build 29, rebuilt) — 2026-11-08
 
