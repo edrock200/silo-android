@@ -160,6 +160,9 @@ sealed class Route(val route: String) {
     data object Recommendations : Route("recommendations")
     data object Inbox : Route("inbox")
 
+    // --- Admin (fork) ---
+    data object AdminConsole : Route("admin")
+
     // --- Requests ---
     data object Requests : Route("requests")
     data object MyRequests : Route("requests/mine")
