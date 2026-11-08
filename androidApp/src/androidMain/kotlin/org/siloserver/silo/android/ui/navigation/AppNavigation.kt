@@ -126,6 +126,9 @@ import org.siloserver.silo.android.ui.screens.profiles.toProfile
 import org.siloserver.silo.model.profile.householdPrimary
 import org.siloserver.silo.viewmodel.MenuAddProfileSession
 import org.siloserver.silo.android.ui.screens.requests.MyRequestsScreen
+import org.siloserver.silo.android.ui.screens.admin.AdminConsoleScreen
+import org.siloserver.silo.common.admin.AdminAccess
+import org.siloserver.silo.common.admin.AdminAvailability
 import org.siloserver.silo.android.ui.screens.requests.RequestDiscoverRowScreen
 import org.siloserver.silo.android.ui.screens.requests.RequestDetailScreen
 import org.siloserver.silo.android.ui.screens.requests.RequestsScreen
@@ -789,6 +792,19 @@ fun AppNavigation(
         value = tokenManager.getProfileId()
     }
 
+    // Fork: offer the admin console to administrator accounts. Checked again
+    // whenever the signed-in profile changes.
+    val adminAccess: AdminAccess = org.koin.compose.koinInject()
+    val adminAvailability by produceState(AdminAvailability.Unknown, overlaySessionKey) {
+        value = if (overlaySessionKey == null) AdminAvailability.Unknown
+        else runCatching { adminAccess.check() }.getOrDefault(AdminAvailability.Unknown)
+    }
+    val openAdminConsole: (() -> Unit)? = remember(adminAvailability, navController) {
+        if (adminAvailability == AdminAvailability.Available || adminAvailability == AdminAvailability.NeedsPrimaryProfile) {
+            { navController.navigate(Route.AdminConsole.route) { launchSingleTop = true } }
+        } else null
+    }
+
     ProvideCardOverlays(store = overlayPrefsStore, sessionKey = overlaySessionKey) {
     ProvideCardPresentation(store = cardPresentationStore, sessionKey = overlaySessionKey) {
     ProvideEpisodeSpoilerPrefs(store = episodeSpoilerStore, sessionKey = overlaySessionKey) {
@@ -807,6 +823,7 @@ fun AppNavigation(
         LocalProfileSwitch provides switchProfile,
         LocalAddProfile provides addProfile,
         LocalAudiobookSession provides audiobookSession,
+        LocalAdminConsole provides openAdminConsole,
     ) {
     Box(modifier = Modifier.fillMaxSize()) {
     // The first-run screens draw over one shared brand-light backdrop that
@@ -1698,6 +1715,14 @@ fun AppNavigation(
                 initialMediaType = MobileSearchMediaType.fromRouteValue(
                     backStackEntry.arguments?.getString("mediaType"),
                 ),
+            )
+        }
+
+        // ---- Admin (fork) ----
+        composable(Route.AdminConsole.route) {
+            AdminConsoleScreen(
+                onClose = { navController.popBackStack() },
+                onSwitchProfile = switchProfile,
             )
         }
 
