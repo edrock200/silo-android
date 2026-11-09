@@ -6,6 +6,23 @@ button, live AI subtitles on TV, and an admin console. Fork builds use the upstr
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 30) — 2026-11-09
+
+Based on upstream `v1.0.0-beta.30` (`58d9aac6e`). Fork changes, including the
+admin console, are carried over. The admin spec was checked against
+silo-server `67d0936` and needed no changes.
+
+### Upstream changes since the previous build
+
+- fix(playback): keep loading when a Dolby Vision start stalls on passthrough audio (#861)
+- fix(tv): restore Google voice search on Android 11 (#860)
+
+### Fork changes in this build
+
+- The TV app asks for the microphone once for both upstream's Android 11
+  voice search and the fork's keyboard voice typing, on every Android
+  version.
+
 ## 1.0.0-hevc (build 29, rebuilt) — 2026-11-08 (admin console)
 
 ### Added in this fork
