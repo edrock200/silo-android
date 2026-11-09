@@ -6,6 +6,21 @@ button, live AI subtitles on TV, and an admin console. Fork builds use the upstr
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 30, rebuilt) — 2026-11-09 (afternoon sync)
+
+Based on upstream `main` at `075e37d6a`. No new public upstream build, so
+the version is unchanged.
+
+### Upstream changes since the previous build
+
+- ci: move feature requests to Discussions and close out-of-policy pull requests (#866)
+
+### Fork changes in this build
+
+- Admin console updated to silo-server `7695787c`: the plugin list now
+  shows why a plugin update failed, and some field descriptions were
+  reworded. The hand-built screens needed no changes.
+
 ## 1.0.0-hevc (build 30) — 2026-11-09
 
 Based on upstream `v1.0.0-beta.30` (`58d9aac6e`). Fork changes, including the
