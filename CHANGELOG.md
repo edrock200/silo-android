@@ -6,6 +6,27 @@ button, live AI subtitles on TV, and an admin console. Fork builds use the upstr
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.0.0-hevc (build 30, rebuilt) — 2026-11-10
+
+Based on upstream `main` at `09f43a215`. No new public upstream build, so
+the version is unchanged. Fork changes are carried over; the admin spec was
+refreshed from silo-server `30a6abd1` (help text only).
+
+### Upstream changes since the previous build
+
+- fix(i18n): keep Android TV text beside its labels and digits consistent in Arabic (#874)
+- fix(i18n): fix layouts and gaps found in translation QA (#873)
+- feat(i18n): format dates, numbers and durations in the app language (#872)
+- feat(i18n): translate text built in the shared module (#871)
+- feat(i18n): offer pseudo-locales in the debug App language picker (#870)
+- feat(i18n): translate settings, playback, browse, account and shell screens (#869)
+- feat(i18n): apply the profile's app language and ship the translation catalog (#868)
+
+### Fork changes in this build
+
+- The phone's Trailer button now uses the app's translated "Trailer" label.
+  The admin console and the HEVC Level Override text are still English only.
+
 ## 1.0.0-hevc (build 30, rebuilt) — 2026-11-09 (afternoon sync)
 
 Based on upstream `main` at `075e37d6a`. No new public upstream build, so
