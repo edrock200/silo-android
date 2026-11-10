@@ -5,7 +5,7 @@ Optimized release builds (R8 + baseline profile) of the
 upstream Silo Android 1.0.0 (beta 30), an **HEVC Level Override**
 setting, **in-app YouTube trailers**, a **Trailer button** next to Play, live AI
 subtitles on TV, and an **admin console** for administrator accounts. Built from
-branch `feat/hevc-level-override-v29` at commit a3dfec131.
+branch `feat/hevc-level-override-v30` at commit b663afe65.
 See [CHANGELOG.md](CHANGELOG.md).
 
 | File | Device | Version | Version code |
