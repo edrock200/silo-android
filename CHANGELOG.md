@@ -6,6 +6,21 @@ button, live AI subtitles on TV, and an admin console. Fork builds use the upstr
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 31) — 2026-11-11
+
+Based on upstream `main` at `84ea05a6b`, five commits past the public
+tester build `v1.2.0-beta.31` (the translation release). Fork changes, including the Admin item in both
+profile menus, are carried over. The admin spec was refreshed from
+silo-server `4a9e527a`.
+
+### Upstream changes since the previous build
+
+- fix(tv): match the Apple TV profile menu's header line, Sign Out colour and divider (#883)
+- feat(profiles): offer Switch Profile or Add Profile by profile count (#881)
+- feat(accounts): open Change Account at launch when several accounts are saved (#880)
+- feat(overlays): match the web's poster overlay layout on phone and TV (#882)
+- docs(agents): tell contributor agents to treat the code as someone else's (#878)
+
 ## 1.0.0-hevc (build 30, rebuilt) — 2026-11-10
 
 Based on upstream `main` at `09f43a215`. No new public upstream build, so
