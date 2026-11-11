@@ -6,10 +6,10 @@ button, live AI subtitles on TV, and an admin console. Fork builds use the upstr
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
-## 1.0.0-hevc (build 30, rebuilt) — 2026-11-11
+## 1.2.0-hevc (build 31) — 2026-11-11
 
-Based on upstream `main` at `84ea05a6b`. No new public upstream build, so
-the version is unchanged. Fork changes, including the Admin item in both
+Based on upstream `main` at `84ea05a6b`, five commits past the public
+tester build `v1.2.0-beta.31` (the translation release). Fork changes, including the Admin item in both
 profile menus, are carried over. The admin spec was refreshed from
 silo-server `4a9e527a`.
 
