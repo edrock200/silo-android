@@ -50,23 +50,42 @@ object MediaCodecCapabilitiesProbe {
     @Volatile
     var hevcLevelOverride: Int = 0
 
-    fun probe(): ProbeResult = withHevcLevelOverride(
-        cached ?: synchronized(this) { cached ?: computeProbe().also { cached = it } },
-        hevcLevelOverride,
-    )
+    fun probe(): ProbeResult = withHevcLevelOverride(rawProbe(), hevcLevelOverride)
+
+    /** The decoders as the device reports them, without the user's HEVC level override. */
+    private fun rawProbe(): ProbeResult =
+        cached ?: synchronized(this) { cached ?: computeProbe().also { cached = it } }
+
+    /**
+     * Fork: the highest HEVC level (normalized, level x 30) any hardware HEVC
+     * decoder reports, before the user's override; null when none reports one.
+     * The settings picker shows it next to Auto.
+     */
+    fun hardwareHevcMaxLevel(): Int? = hardwareHevcMaxLevel(rawProbe())
+
+    internal fun hardwareHevcMaxLevel(result: ProbeResult): Int? =
+        result.videoDecodeCapabilities
+            .filter { it.codec == "hevc" && it.hardware }
+            .flatMap { it.levels }
+            .maxOrNull()
 
     /**
      * Adds every standard HEVC level up to [override] to each hardware HEVC
      * decoder's reported levels, so the server stops refusing streams tagged
      * above the decoder's advertised ceiling. Levels the decoder already
      * reports are kept.
+     *
+     * Software decoders are left alone, and so is a hardware entry with no
+     * levels: the server reads an empty list as "unconstrained", so adding
+     * levels there would newly bound it (and would flip the server's
+     * level-bound HEVC transcode and download guards).
      */
     internal fun withHevcLevelOverride(result: ProbeResult, override: Int): ProbeResult {
         if (override <= 0) return result
         val forced = HEVC_LEVELS.values.filter { it <= override }.toSet() + override
         return result.copy(
             videoDecodeCapabilities = result.videoDecodeCapabilities.map { capability ->
-                if (capability.codec != "hevc") {
+                if (capability.codec != "hevc" || !capability.hardware || capability.levels.isEmpty()) {
                     capability
                 } else {
                     capability.copy(levels = (capability.levels + forced).distinct().sorted())
@@ -80,9 +99,13 @@ object MediaCodecCapabilitiesProbe {
         synchronized(this) { cached = null }
     }
 
-    /** Returns an immutable copy for diagnostics without reconfiguring or opening any codec. */
+    /**
+     * Returns an immutable copy for diagnostics without reconfiguring or opening any codec.
+     * Fork: the decoders as the device reports them, without the user's HEVC level
+     * override, so a report is never mistaken for real decoder data.
+     */
     fun diagnosticsSnapshot(): ProbeResult {
-        val result = probe()
+        val result = rawProbe()
         return result.copy(
             videoCodecs = result.videoCodecs.toSet(),
             videoDecodeCapabilities = result.videoDecodeCapabilities.map { capability ->
