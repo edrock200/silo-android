@@ -25,8 +25,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -97,6 +99,10 @@ internal fun ReclaimPageFocus(focus: FocusRequester, key: Any?, enabled: Boolean
 /** What a row does when picked; the screen's one dialog at a time. */
 private sealed interface TvAdminDialog {
     data class EditText(val field: AdminField, val value: String) : TvAdminDialog
+    /** One value of a list field; [index] -1 adds one. */
+    data class EditItem(val field: AdminField, val index: Int, val value: String) : TvAdminDialog
+    /** One entry of a key/value field; a null [key] adds one. */
+    data class EditEntry(val field: AdminField, val key: String?, val value: String) : TvAdminDialog
     data class EditRawBody(val value: String) : TvAdminDialog
     data class Choose(val field: AdminField, val options: List<String>, val value: String) : TvAdminDialog
 }
@@ -140,7 +146,18 @@ fun TvAdminConsoleScreen(
                 )
                 state.catalog == null && state.loadError != null -> Notice(state.loadError.orEmpty(), "Try again" to viewModel::reload)
                 state.catalog == null -> Notice("Loading…", null)
-                else -> EntryContent(state, entry, viewModel) { dialog = it }
+                else -> {
+                    // Each screen of the console's stack keeps its list
+                    // position, so Back returns near the row it left.
+                    val saved = rememberSaveableStateHolder()
+                    val depth = state.stack.size
+                    var deepest by remember { mutableIntStateOf(depth) }
+                    LaunchedEffect(depth) {
+                        for (gone in depth + 1..deepest) saved.removeState(gone)
+                        deepest = depth
+                    }
+                    saved.SaveableStateProvider(depth) { EntryContent(state, entry, viewModel) { dialog = it } }
+                }
             }
         }
     }
@@ -150,12 +167,11 @@ fun TvAdminConsoleScreen(
         is TvAdminDialog.EditText -> TvTextInputDialog(
             title = d.field.label,
             label = d.field.help?.take(160) ?: when (d.field.kind) {
-                AdminFieldKind.Lines -> "Separate values with commas"
                 AdminFieldKind.JsonText -> "JSON"
                 else -> d.field.label
             },
             confirmLabel = "Done",
-            initialValue = if (d.field.kind == AdminFieldKind.Lines) d.value.lines().joinToString(", ") else d.value,
+            initialValue = d.value,
             allowBlank = true,
             keyboardType = when (d.field.kind) {
                 AdminFieldKind.Integer -> KeyboardType.Number
@@ -164,10 +180,52 @@ fun TvAdminConsoleScreen(
                 else -> KeyboardType.Text
             },
             onConfirm = { text ->
-                val value = if (d.field.kind == AdminFieldKind.Lines) {
-                    text.split(',', '\n').map { it.trim() }.filter { it.isNotEmpty() }.joinToString("\n")
-                } else text
-                run?.let { viewModel.setValue(it.id, d.field.key, value) }
+                run?.let { viewModel.setValue(it.id, d.field.key, text) }
+                dialog = null
+            },
+            onDismiss = { dialog = null },
+        )
+        // List values are edited one at a time, so a value holding a comma stays whole.
+        is TvAdminDialog.EditItem -> TvTextInputDialog(
+            title = d.field.label,
+            label = if (d.index < 0) "New value" else "Leave empty to remove this value",
+            confirmLabel = "Done",
+            initialValue = d.value,
+            allowBlank = d.index >= 0,
+            onConfirm = { text ->
+                run?.let { r ->
+                    val items = lineItems(r.values[d.field.key].orEmpty()).toMutableList()
+                    val value = text.trim()
+                    when {
+                        d.index < 0 -> if (value.isNotEmpty()) items += value
+                        value.isEmpty() -> items.removeAt(d.index)
+                        else -> items[d.index] = value
+                    }
+                    viewModel.setValue(r.id, d.field.key, items.joinToString("\n"))
+                }
+                dialog = null
+            },
+            onDismiss = { dialog = null },
+        )
+        is TvAdminDialog.EditEntry -> TvTextInputDialog(
+            title = d.key ?: d.field.label,
+            label = if (d.key == null) "key=value" else "Leave empty to remove this entry",
+            confirmLabel = "Done",
+            initialValue = d.value,
+            allowBlank = d.key != null,
+            onConfirm = { text ->
+                run?.let { r ->
+                    val entries = LinkedHashMap(keyValueEntries(r.values[d.field.key].orEmpty()))
+                    if (d.key == null) {
+                        val key = text.substringBefore('=').trim()
+                        if (key.isNotEmpty()) entries[key] = text.substringAfter('=', "").trim()
+                    } else if (text.isBlank()) {
+                        entries.remove(d.key)
+                    } else {
+                        entries[d.key] = text.trim()
+                    }
+                    viewModel.setValue(r.id, d.field.key, entries.entries.joinToString("\n") { (k, v) -> "$k=$v" })
+                }
                 dialog = null
             },
             onDismiss = { dialog = null },
@@ -291,7 +349,7 @@ private fun EntryContent(
             val rows = AdminDisplay.rows(entry.value)
             if (entry.actions.isNotEmpty()) {
                 section("Actions")
-                itemsIndexed(entry.actions) { i, bound -> ActionRow(bound, Modifier) { vm.openBound(bound) } }
+                itemsIndexed(entry.actions) { i, bound -> ActionRow(bound, Modifier) { vm.openBound(bound, source = entry.value) } }
             }
             section("Details")
             itemsIndexed(rows) { i, row ->
@@ -338,6 +396,9 @@ private fun RunContent(
         }
         Page(firstRow) {
             run.error?.let { item { Banner(it, Destructive) } }
+            if (run.stale && run.hasTagSource) {
+                item { TvRow("Reload current values", "Replaces what you typed with the record as it is now", chevron = false) { vm.reloadCurrent(run.id) } }
+            }
             if (submitFirst) submitRow()
             run.operation.description?.takeIf { it.isNotBlank() }?.let { item { Footnote(it) } }
             if (run.form.bodyIsRawJson) {
@@ -359,10 +420,34 @@ private fun RunContent(
                     )
                     return@itemsIndexed
                 }
+                if (field.kind == AdminFieldKind.Lines || field.kind == AdminFieldKind.KeyValues) {
+                    Column(Modifier.padding(start = indent), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text(
+                            field.label + if (field.required) " *" else "",
+                            color = SiloOnSurface,
+                            fontSize = 19.sp,
+                            modifier = Modifier.padding(start = 8.dp, top = 8.dp),
+                        )
+                        field.help?.let { Text(it.take(140), color = SiloSecondaryText, fontSize = 15.sp, modifier = Modifier.padding(start = 8.dp)) }
+                        if (field.kind == AdminFieldKind.Lines) {
+                            lineItems(value).forEachIndexed { index, item ->
+                                TvRow(item, null, chevron = false) { openDialog(TvAdminDialog.EditItem(field, index, item)) }
+                            }
+                            TvRow("Add a value", null, chevron = false) { openDialog(TvAdminDialog.EditItem(field, -1, "")) }
+                        } else {
+                            keyValueEntries(value).forEach { (key, entryValue) ->
+                                TvRow(key, entryValue.ifEmpty { "Empty" }, chevron = false) {
+                                    openDialog(TvAdminDialog.EditEntry(field, key, entryValue))
+                                }
+                            }
+                            TvRow("Add an entry", null, chevron = false) { openDialog(TvAdminDialog.EditEntry(field, null, "")) }
+                        }
+                    }
+                    return@itemsIndexed
+                }
                 val shown = when (field.kind) {
                     AdminFieldKind.Toggle -> when (value) { "true" -> "On"; "false" -> "Off"; else -> "Not set" }
                     AdminFieldKind.Secret -> if (value.isBlank()) "Not set" else "••••••"
-                    AdminFieldKind.Lines -> value.lines().filter { it.isNotBlank() }.joinToString(", ").ifBlank { "Not set" }
                     else -> value.ifBlank { "Not set" }
                 }
                 Box(Modifier.padding(start = indent)) {
@@ -412,12 +497,19 @@ private fun RunContent(
         } else if (response != null) {
             if (actions.isNotEmpty()) {
                 section("Actions")
-                itemsIndexed(actions) { _, bound -> ActionRow(bound, Modifier) { vm.openBound(bound) } }
+                itemsIndexed(actions) { _, bound -> ActionRow(bound, Modifier) { vm.openBound(bound, source = response.body) } }
             }
             recordRows(response.body) { title, value -> vm.openNested(title, value) }
         }
     }
 }
+
+/** The values of a list field, one per line. */
+private fun lineItems(value: String): List<String> = value.lines().map { it.trim() }.filter { it.isNotEmpty() }
+
+/** The entries of a key/value field, `key=value` per line. */
+private fun keyValueEntries(value: String): Map<String, String> =
+    value.lines().filter { it.isNotBlank() }.associate { it.substringBefore('=').trim() to it.substringAfter('=', "").trim() }
 
 private fun LazyListScope.recordRows(value: JsonElement?, onNested: (String, JsonElement) -> Unit) {
     val rows = AdminDisplay.rows(value)
