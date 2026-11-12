@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fork: English-only strings for features upstream doesn't have. -->
+<resources>
+    <string name="fork_liveSubtitle_transcribing">Transcribing…</string>
+    <string name="fork_liveSubtitle_translating">Translating subtitles…</string>
+</resources>
