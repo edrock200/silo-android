@@ -114,7 +114,9 @@ import org.siloserver.silo.common.settings.CardPresentationSupport
 import org.siloserver.silo.common.settings.ConnectionSpeedSettingsModel
 import org.siloserver.silo.common.settings.PlayerSettingsStore
 import org.siloserver.silo.common.settings.TitleArtStore
+import org.siloserver.silo.common.settings.HevcLevelOverrideOptions
 import org.siloserver.silo.common.settings.UseProfileSettingsCopy
+import org.siloserver.silo.common.settings.hevcLevelOverrideLabel
 import org.siloserver.silo.common.settings.bufferingQualityModeLabel
 import org.siloserver.silo.common.settings.learnedLimitLabel
 import org.siloserver.silo.common.settings.shownIn
@@ -1353,8 +1355,8 @@ private fun TvPlaybackSettingsPane(
                     onCheckedChange = onForceHdrPassthroughChanged,
                 )
                 SettingsValueRow(
-                    label = "HEVC Level Override",
-                    value = hevcLevelOverrideLabel(state.hevcLevelOverride),
+                    label = stringResource(CommonR.string.fork_hevcLevelOverride_title),
+                    value = hevcLevelOverrideLabel(state.hevcLevelOverride, state.hevcDecoderMaxLevel),
                     onClick = { activePicker = PlaybackPicker.HevcLevelOverride },
                 )
                 // Android TV only: tvOS composites its own letterbox, so the
@@ -1372,10 +1374,8 @@ private fun TvPlaybackSettingsPane(
                         CommonR.string.settings_streaming_footer,
                         QualityChoices.description(state.qualityResolution, state.maxBitrateKbps).text(),
                     ) +
-                        // Fork: the HEVC Level Override sentence (English only).
-                        " HEVC Level Override reports a higher HEVC level than this device's decoder " +
-                        "advertises, so the server direct plays files tagged above it (such as level 6.2) " +
-                        "instead of transcoding them. Files that truly exceed the decoder may stutter or fail.",
+                        // Fork: the HEVC Level Override sentences (English only).
+                        " " + stringResource(CommonR.string.fork_hevcLevelOverride_footer),
                 )
             }
         }
@@ -1653,8 +1653,10 @@ private fun TvPlaybackSettingsPane(
             onDismiss = { activePicker = null },
         )
         PlaybackPicker.HevcLevelOverride -> TvSettingsPickerSheet(
-            title = "HEVC Level Override",
-            options = HevcLevelOverrideOptions.map { PickerOption(it.toString(), hevcLevelOverrideLabel(it)) },
+            title = stringResource(CommonR.string.fork_hevcLevelOverride_title),
+            options = HevcLevelOverrideOptions.options(state.hevcDecoderMaxLevel, state.hevcLevelOverride).map {
+                PickerOption(it.toString(), hevcLevelOverrideLabel(it, state.hevcDecoderMaxLevel))
+            },
             selectedId = state.hevcLevelOverride.toString(),
             onSelect = { id ->
                 id.toIntOrNull()?.let(onHevcLevelOverrideChanged)
@@ -3097,12 +3099,6 @@ private val PassOutThresholdOptions = listOf(0, 2, 3, 4, 5)
 
 // Up-Next prompt timing (seconds before end; 0 = at end). Mirrors tvOS.
 private val NextUpPromptOptions = listOf(0, 10, 30, 60, 120)
-
-// HEVC level override, normalized as level x 30 (0 = report the decoder's own).
-private val HevcLevelOverrideOptions = listOf(0, 150, 153, 156, 180, 183, 186)
-
-private fun hevcLevelOverrideLabel(level: Int): String =
-    if (level <= 0) "Auto" else "Level ${level / 30}.${(level % 30) / 3}"
 
 @Composable
 private fun resumeRewindLabel(seconds: Int): String =
