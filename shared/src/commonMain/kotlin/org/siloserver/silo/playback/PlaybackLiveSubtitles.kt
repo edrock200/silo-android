@@ -84,6 +84,33 @@ data class LiveSubtitleTrack(
         return copy(cues = merged, done = maxOf(this.done, done), total = maxOf(this.total, total))
     }
 
+    /**
+     * Whether the live lines own the subtitle slot at [seconds]: a live cue
+     * shows there or one ends or starts within [gapSeconds]. The short pause
+     * between two live cues still counts, so the player's own subtitles do
+     * not flash up between lines; a region the job has not reached yet does not.
+     */
+    fun covers(seconds: Double, gapSeconds: Double = LIVE_SUBTITLE_COVER_GAP_SECONDS): Boolean {
+        if (cues.isEmpty()) return false
+        // First cue that starts after `seconds + gap`; only cues before it can
+        // be near enough.
+        val limit = seconds + gapSeconds
+        var lo = 0
+        var hi = cues.size
+        while (lo < hi) {
+            val mid = (lo + hi) ushr 1
+            if (cues[mid].startSeconds <= limit) lo = mid + 1 else hi = mid
+        }
+        var i = lo - 1
+        var scanned = 0
+        while (i >= 0 && scanned < 8) {
+            if (cues[i].endSeconds + gapSeconds > seconds) return true
+            i--
+            scanned++
+        }
+        return false
+    }
+
     /** Text of every cue showing at [seconds] (source time), in start order. */
     fun textAt(seconds: Double): List<String> {
         if (cues.isEmpty()) return emptyList()
@@ -108,6 +135,9 @@ data class LiveSubtitleTrack(
         return showing
     }
 }
+
+/** How long a pause between live cues still keeps the player's own subtitles hidden. */
+const val LIVE_SUBTITLE_COVER_GAP_SECONDS = 4.0
 
 private val LIVE_SUBTITLE_EVENTS = setOf(
     "subtitle_translation_started",
