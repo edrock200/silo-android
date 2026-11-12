@@ -2,9 +2,30 @@
 
 This fork tracks [Silo-Server/silo-android](https://github.com/Silo-Server/silo-android)
 and adds an HEVC level override, in-app YouTube trailers, a Trailer
-button, live AI subtitles on TV, and an admin console. Fork builds use the upstream public version with a `-hevc` suffix.
+button, live AI subtitles, and an admin console. Fork builds use the upstream public version with a `-hevc` suffix.
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
+
+## 1.2.0-hevc (build 32) — 2026-11-12 (live subtitles on phone)
+
+### Added in this fork
+
+- **The phone shows AI subtitles while they're being made.** Like the TV,
+  the phone now draws the lines the server streams while an AI translation
+  or transcription runs, starting at your position, and switches to the
+  finished subtitle track when it's ready. The AI sheet closes on its own
+  when the first lines arrive.
+
+### Fixed in this fork
+
+- **Transcribing no longer translates by mistake.** When an audio track had
+  no language tag, Transcribe always ran "transcribe and translate", even
+  English to English: it said "Transcribing & translating", used extra AI
+  quota and took longer to show the first lines. Untagged audio is now
+  transcribed directly, with the chosen language as a hint. Audio tagged with
+  a different language than the one you pick is still translated.
+- While waiting for the first lines, the overlay says "Transcribing…" for a
+  transcription instead of "Translating subtitles…".
 
 ## 1.2.0-hevc (build 31, rebuilt) — 2026-11-12
 
