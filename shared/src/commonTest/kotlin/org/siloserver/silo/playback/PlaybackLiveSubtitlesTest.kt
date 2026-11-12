@@ -76,4 +76,18 @@ class PlaybackLiveSubtitlesTest {
         )
         assertEquals(listOf(LiveSubtitleCue(1.0, 2.0, "Zdravo")), assertIs<PlaybackLiveSubtitleEvent.Cues>(event).cues)
     }
+
+    @Test fun dismissedJobsStayDismissedUntilRestored() {
+        val dismissals = LiveSubtitleDismissals(capacity = 2)
+        dismissals.dismiss(1)
+        assertTrue(dismissals.isDismissed(1))
+        assertTrue(!dismissals.isDismissed(2))
+        dismissals.restore(1)
+        assertTrue(!dismissals.isDismissed(1))
+        dismissals.dismiss(1)
+        dismissals.dismiss(2)
+        dismissals.dismiss(3)
+        assertTrue(!dismissals.isDismissed(1), "oldest id drops past capacity")
+        assertTrue(dismissals.isDismissed(2) && dismissals.isDismissed(3))
+    }
 }
