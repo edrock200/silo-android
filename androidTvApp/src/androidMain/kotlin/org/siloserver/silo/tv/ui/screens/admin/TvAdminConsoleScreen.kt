@@ -258,7 +258,12 @@ private fun EntryContent(
             itemsIndexed(AdminCategory.entries.toList()) { i, category ->
                 TvRow(category.title, category.blurb) { vm.openCategory(category) }
             }
-            item { Footnote("Server API ${catalog.spec.version} · ${catalog.spec.operations.size} admin operations") }
+            item {
+                Footnote(
+                    "Server API ${catalog.spec.version} · ${catalog.operations.size} admin operations" +
+                        catalog.spec.source?.let { " · contract from silo-server $it" }.orEmpty(),
+                )
+            }
         }
         is AdminEntry.Category -> Page(firstRow) {
             val resources = catalog.resourcesIn(entry.category)
