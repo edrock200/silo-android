@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import io.ktor.http.Headers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -58,16 +59,45 @@ enum class AdminAvailability { Unknown, NotAdmin, NeedsPrimaryProfile, Available
 /**
  * Fork: the admin role belongs to the account, and the server takes admin
  * calls only on the account's primary profile.
+ *
+ * A definite answer is kept for the active profile, so the menus can ask
+ * whenever they are shown without a network call each time; Unknown (the
+ * server didn't answer) is never kept, so the caller can ask again.
  */
 class AdminAccess(
     private val auth: AuthRepository,
     private val profiles: ProfileRepository,
 ) {
+    @Volatile private var cached: Pair<String, AdminAvailability>? = null
+
     suspend fun check(): AdminAvailability {
+        val profileId = profiles.getActiveProfileId()
+        cached?.let { (id, availability) -> if (profileId != null && id == profileId) return availability }
         val user = (auth.getCurrentUser() as? ApiResult.Success)?.data ?: return AdminAvailability.Unknown
-        if (!user.role.equals("admin", ignoreCase = true)) return AdminAvailability.NotAdmin
-        val profile = profiles.getActiveProfile()
-        return if (profile == null || profile.isPrimary) AdminAvailability.Available else AdminAvailability.NeedsPrimaryProfile
+        val availability = if (!user.role.equals("admin", ignoreCase = true)) {
+            AdminAvailability.NotAdmin
+        } else {
+            // A profile that can't be looked up is not assumed to be the primary one.
+            val profile = profiles.getActiveProfile() ?: return AdminAvailability.Unknown
+            if (profile.isPrimary) AdminAvailability.Available else AdminAvailability.NeedsPrimaryProfile
+        }
+        if (profileId != null) cached = profileId to availability
+        return availability
+    }
+
+    /**
+     * [check], asked again with growing pauses while the answer is Unknown
+     * (a slow first reply after a cold start or a VPN reconnect).
+     */
+    suspend fun checkUntilKnown(publish: (AdminAvailability) -> Unit) {
+        var pause = 2_000L
+        while (true) {
+            val availability = runCatching { check() }.getOrDefault(AdminAvailability.Unknown)
+            publish(availability)
+            if (availability != AdminAvailability.Unknown) return
+            delay(pause)
+            pause = (pause * 2).coerceAtMost(60_000L)
+        }
     }
 }
 
