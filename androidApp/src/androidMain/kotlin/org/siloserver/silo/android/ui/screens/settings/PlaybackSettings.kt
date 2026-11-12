@@ -19,8 +19,10 @@ import org.siloserver.silo.common.R as CommonR
 import org.siloserver.silo.android.ui.components.SiloConfirmDialog
 import org.siloserver.silo.common.i18n.LocaleFormat
 import org.siloserver.silo.common.i18n.currentNumberLocale
+import org.siloserver.silo.common.settings.HevcLevelOverrideOptions
 import org.siloserver.silo.common.settings.UseProfileSettingsCopy
 import org.siloserver.silo.common.settings.bufferingQualityModeLabel
+import org.siloserver.silo.common.settings.hevcLevelOverrideLabel
 import org.siloserver.silo.common.settings.learnedLimitLabel
 import org.siloserver.silo.domain.player.BufferingQualityMode
 import org.siloserver.silo.domain.player.IntroSkipMode
@@ -377,11 +379,6 @@ fun PlaybackEpisodesSection(
     }
 }
 
-// HEVC level override, normalized as level x 30 (0 = report the decoder's own).
-private val hevcLevelOverrideOptions = listOf(0, 150, 153, 156, 180, 183, 186)
-private fun hevcLevelOverrideLabel(level: Int) =
-    if (level <= 0) "Auto" else "Level ${level / 30}.${(level % 30) / 3}"
-
 /**
  * Playback → Decoder: the HEVC level this device reports to the server. See
  * [PlaybackSettingsKeys.HevcLevelOverride].
@@ -389,23 +386,22 @@ private fun hevcLevelOverrideLabel(level: Int) =
 @Composable
 fun PlaybackDecoderSection(
     hevcLevelOverride: Int,
+    hevcDecoderMaxLevel: Int?,
     onHevcLevelOverrideChanged: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val options = HevcLevelOverrideOptions.options(hevcDecoderMaxLevel, hevcLevelOverride)
     SettingsSection(
-        title = "Decoder",
-        footer = "HEVC Level Override reports a higher HEVC level than this device's decoder advertises, " +
-            "so the server direct plays files tagged above it (such as level 6.2) instead of transcoding " +
-            "them. Files that truly exceed the decoder may stutter or fail.",
+        title = stringResource(CommonR.string.fork_settings_decoder_title),
+        footer = stringResource(CommonR.string.fork_hevcLevelOverride_footer),
         modifier = modifier,
     ) {
-        SettingsDropdownRow(
-            label = "HEVC Level Override",
-            value = hevcLevelOverrideLabel(hevcLevelOverride),
-            options = hevcLevelOverrideOptions.map(::hevcLevelOverrideLabel),
-            onOptionSelected = { label ->
-                onHevcLevelOverrideChanged(hevcLevelOverrideOptions.first { hevcLevelOverrideLabel(it) == label })
-            },
+        SettingsIndexedDropdownRow(
+            label = stringResource(CommonR.string.fork_hevcLevelOverride_title),
+            value = hevcLevelOverrideLabel(hevcLevelOverride, hevcDecoderMaxLevel),
+            options = options.map { hevcLevelOverrideLabel(it, hevcDecoderMaxLevel) },
+            selectedIndex = options.indexOf(hevcLevelOverride.coerceAtLeast(0)),
+            onIndexSelected = { onHevcLevelOverrideChanged(options[it]) },
         )
     }
 }
