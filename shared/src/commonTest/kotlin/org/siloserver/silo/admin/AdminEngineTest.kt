@@ -81,6 +81,80 @@ class AdminEngineTest {
     }
 
     @Test
+    fun emptiedFieldsClearInsteadOfBeingLeftOut() {
+        val form = AdminForm(op("PATCH", "users/{id}"), mapOf("id" to "5"))
+        val prefill = Json.parseToJsonElement("""{"role":"user","max_streams":2,"tags":["a"]}""")
+        val values = form.initialValues(prefill).toMutableMap()
+        values["max_streams"] = ""
+        values["tags"] = ""
+        val body = form.build(values).getOrThrow().body!!.jsonObject
+        assertEquals(kotlinx.serialization.json.JsonNull, body["max_streams"], "a nullable field the user emptied sends null")
+        assertEquals(kotlinx.serialization.json.JsonArray(emptyList()), body["tags"], "an emptied list sends []")
+        assertTrue("policy" !in body, "an untouched field is still left out")
+    }
+
+    private val formSpec = AdminSpec.parse(
+        """
+        {"info":{"version":"2"},
+         "paths":{
+          "/api/v2/admin/settings":{"put":{"operationId":"updateAdminSettings","requestBody":{"required":true,"mediaType":"application/json",
+             "schema":{"type":"object","required":["values"],"properties":{"values":{"type":"object","additionalProperties":{"type":"string"}}}}},"responses":{"200":{}}}},
+          "/api/v2/admin/settings/{key}":{"put":{"operationId":"updateAdminSetting","parameters":[{"name":"key","in":"path","required":true}],
+             "requestBody":{"required":true,"mediaType":"application/json","schema":{"type":"object","required":["value"],"properties":{"value":{"type":"string"}}}},"responses":{"200":{}}}},
+          "/api/v2/admin/accounts":{"post":{"operationId":"createAdminAccount","requestBody":{"required":true,"mediaType":"application/json",
+             "schema":{"type":"object","properties":{"username":{"type":"string"},"password":{"type":"string"},"admin_token":{"type":"string"},"token_ttl":{"type":"string"}}}},"responses":{"201":{}}}},
+          "/api/v2/admin/sessions/{session_id}/pause":{"post":{"operationId":"pauseAdminPlaybackSession","parameters":[{"name":"session_id","in":"path","required":true}],
+             "requestBody":{"required":true,"mediaType":"application/json","schema":{"type":"object","required":["command_id","sequence"],
+               "properties":{"command_id":{"type":"string"},"sequence":{"type":"integer"},"reason":{"type":"string"}}}},"responses":{"200":{}}}}
+         },
+         "schemas":{}}
+        """.trimIndent(),
+    )
+    private fun fop(method: String, path: String) = AdminCatalog(formSpec).operation(method, "/api/v2/admin/$path")!!
+
+    @Test
+    fun aRequiredTextCanBeSetEmpty() {
+        val form = AdminForm(fop("PUT", "settings/{key}"), mapOf("key" to "ui.banner"))
+        assertEquals(JsonPrimitive(""), form.build(mapOf("value" to "")).getOrThrow().body!!.jsonObject["value"])
+    }
+
+    @Test
+    fun mapsAreEditedAsKeyValueLines() {
+        val form = AdminForm(fop("PUT", "settings"))
+        val field = form.fields.single()
+        assertEquals(AdminFieldKind.KeyValues, field.kind)
+        val values = form.initialValues(Json.parseToJsonElement("""{"values":{"a.b":"1","c":"x=y"}}"""))
+        assertEquals("a.b=1\nc=x=y", values["values"])
+        val body = form.build(values).getOrThrow().body!!.jsonObject
+        assertEquals(Json.parseToJsonElement("""{"a.b":"1","c":"x=y"}"""), body["values"])
+        assertTrue(form.build(mapOf("values" to "no equals sign")).isFailure)
+    }
+
+    @Test
+    fun credentialFieldsAreMaskedByName() {
+        val kinds = AdminForm(fop("POST", "accounts")).fields.associate { it.key to it.kind }
+        assertEquals(AdminFieldKind.Secret, kinds["password"])
+        assertEquals(AdminFieldKind.Secret, kinds["admin_token"])
+        assertEquals(AdminFieldKind.Text, kinds["username"])
+        assertEquals(AdminFieldKind.Text, kinds["token_ttl"])
+    }
+
+    @Test
+    fun aHeldCommandIdentityIsReused() {
+        val form = AdminForm(fop("POST", "sessions/{session_id}/pause"), mapOf("session_id" to "s1"))
+        assertTrue(form.sendsCommandIdentity)
+        assertEquals(listOf("reason"), form.fields.map { it.key }, "the identity isn't a form field")
+        val identity = AdminForm.newCommandIdentity()
+        val first = form.build(identity).getOrThrow().body!!.jsonObject
+        val again = form.build(identity).getOrThrow().body!!.jsonObject
+        assertEquals(first, again, "a resend carries the same command_id and sequence")
+        val serverLatest = 4_000_000_000_000L
+        AdminForm.raiseCommandSequenceFloor(serverLatest)
+        val next = AdminForm.newCommandIdentity()[AdminForm.COMMAND_SEQUENCE_KEY]!!.toLong()
+        assertTrue(next > serverLatest, "after a stale refusal the next sequence goes above the server's")
+    }
+
+    @Test
     fun formRejectsMissingRequiredAndBadNumbers() {
         val form = AdminForm(op("PATCH", "users/{id}"), mapOf("id" to "5"))
         assertTrue(form.build(emptyMap()).isFailure)
