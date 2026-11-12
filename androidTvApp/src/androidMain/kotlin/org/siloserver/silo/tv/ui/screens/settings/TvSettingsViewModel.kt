@@ -161,6 +161,8 @@ class TvSettingsViewModel(
         val dvProfile7HDR10Fallback: Boolean = false,
         val forceHdrPassthrough: Boolean = false,
         val hevcLevelOverride: Int = 0,
+        /** Fork: the highest HEVC level the hardware decoder reports, null when unknown. */
+        val hevcDecoderMaxLevel: Int? = null,
         val trueBlackBars: Boolean = false,
         val autoSkipCredits: Boolean = false,
         // Seconds to skip back on resume (0 = off); consecutive auto-advances
@@ -491,6 +493,11 @@ class TvSettingsViewModel(
             playerSettingsStore.hevcLevelOverrideFlow.collect { value ->
                 _uiState.update { it.copy(hevcLevelOverride = value) }
             }
+        }
+        // Fork: the decoder's own HEVC level, for the override picker.
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.Default) {
+            val max = runCatching { org.siloserver.silo.common.player.MediaCodecCapabilitiesProbe.hardwareHevcMaxLevel() }.getOrNull()
+            _uiState.update { it.copy(hevcDecoderMaxLevel = max) }
         }
         viewModelScope.launch {
             playerSettingsStore.trueBlackBarsFlow.collect { value ->
