@@ -2391,13 +2391,14 @@ fun TvPlayerScreen(
                 }
 
                 if (!isInPictureInPictureMode && liveSubtitleTrack != null) {
-                    TvLiveSubtitleOverlay(
+                    org.siloserver.silo.common.player.LiveSubtitleOverlay(
                         track = liveSubtitleTrack,
                         positionSourceSeconds = {
                             viewModel.liveSubtitleSourceSeconds(mediaController?.currentPosition ?: 0L)
                         },
                         bottomLiftPx = cueReachPx,
                         hidden = state.hudOpen,
+                        style = org.siloserver.silo.common.player.LiveSubtitleOverlayStyle.Tv,
                     )
                 }
 

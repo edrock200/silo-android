@@ -61,8 +61,9 @@ adds these to upstream Silo:
   embedded player instead of opening the YouTube app, whose "Who's watching?"
   profile picker dropped the video.
 - **Trailer button next to Play** on movie and series detail pages.
-- **Live AI subtitles on TV:** translated lines appear within seconds while an
-  AI translation runs, instead of only after the whole file is done.
+- **Live AI subtitles on phone and TV:** lines appear while an AI translation
+  or transcription runs, instead of only after the whole file is done.
+  Transcribing a track with no language tag no longer runs a translation pass.
 - **Admin console on phone and TV:** administrator accounts get the web
   admin's controls in the app: now playing, requests, tasks, scans, logs,
   users, invitations, access groups, devices, API keys, libraries,
