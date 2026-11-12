@@ -6,6 +6,16 @@ button, live AI subtitles on TV, and an admin console. Fork builds use the upstr
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 31, rebuilt) — 2026-11-12
+
+Based on upstream `main` at `c2ad874cd`. No new public upstream build, so
+the version is unchanged. Fork changes are carried over; the admin spec was
+refreshed from silo-server `aa827602` (help text only).
+
+### Upstream changes since the previous build
+
+- fix(tv): start the embedded subtitle mount deadline on the new mount's tracks (#879)
+
 ## 1.2.0-hevc (build 31) — 2026-11-11
 
 Based on upstream `main` at `84ea05a6b`, five commits past the public
