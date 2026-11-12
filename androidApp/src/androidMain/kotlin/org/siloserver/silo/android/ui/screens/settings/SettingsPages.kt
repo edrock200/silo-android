@@ -219,6 +219,7 @@ fun SettingsPlaybackScreen(viewModel: SettingsViewModel, onBackClick: () -> Unit
         item(key = "decoder") {
             PlaybackDecoderSection(
                 hevcLevelOverride = state.hevcLevelOverride,
+                hevcDecoderMaxLevel = state.hevcDecoderMaxLevel,
                 onHevcLevelOverrideChanged = viewModel::setHevcLevelOverride,
             )
         }
