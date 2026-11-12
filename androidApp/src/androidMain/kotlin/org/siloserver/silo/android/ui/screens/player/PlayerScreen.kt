@@ -2000,6 +2000,30 @@ fun PlayerScreen(
                 )
             }
 
+            // Fork: a running AI job's streamed lines, for this session only.
+            // Media3's own cues hide meanwhile so only one set shows; the
+            // finished track takes over once it is selected.
+            val liveSubtitleTrack = viewModel.liveSubtitle.collectAsState().value
+                ?.takeIf { it.sessionId == uiState.sessionId }
+            val liveSubtitleActive = liveSubtitleTrack != null
+            LaunchedEffect(playerViewRef, liveSubtitleActive) {
+                playerViewRef?.subtitleView?.visibility =
+                    if (liveSubtitleActive) android.view.View.INVISIBLE else android.view.View.VISIBLE
+            }
+            if (liveSubtitleTrack != null && !isInPictureInPictureMode && !castState.isConnected) {
+                Box(modifier = videoSurfaceModifier) {
+                    org.siloserver.silo.common.player.LiveSubtitleOverlay(
+                        track = liveSubtitleTrack,
+                        positionSourceSeconds = {
+                            viewModel.liveSubtitleSourceSeconds(controller?.currentPosition ?: 0L)
+                        },
+                        bottomLiftPx = 0,
+                        hidden = false,
+                        style = org.siloserver.silo.common.player.LiveSubtitleOverlayStyle.Phone,
+                    )
+                }
+            }
+
             // In tabletop posture the regular PlayerOverlay is deliberately
             // constrained to the controls pane. Keep playback/reconnection
             // feedback on the video itself instead of showing a spinner below

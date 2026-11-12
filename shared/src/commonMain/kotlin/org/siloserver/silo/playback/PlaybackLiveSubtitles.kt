@@ -74,6 +74,8 @@ data class LiveSubtitleTrack(
     val done: Int = 0,
     val total: Int = 0,
     val completed: Boolean = false,
+    /** A plain transcription (no translation): the waiting text says so. */
+    val transcribing: Boolean = false,
 ) {
     /** Adds a batch, dropping exact repeats (a resent batch after a reconnect). */
     fun plus(batch: List<LiveSubtitleCue>, done: Int, total: Int): LiveSubtitleTrack {
