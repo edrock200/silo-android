@@ -144,7 +144,7 @@ fun decodePlaybackLiveSubtitleEvent(name: String, payload: JsonObject): Playback
                 val end = (cue["end"] as? JsonPrimitive)?.doubleOrNull ?: return@mapNotNull null
                 val text = (cue["text"] as? JsonPrimitive)?.contentOrNull ?: return@mapNotNull null
                 if (!start.isFinite() || !end.isFinite() || end <= start) return@mapNotNull null
-                LiveSubtitleCue(start, end, text)
+                LiveSubtitleCue(start, end, liveCueDisplayText(text))
             },
             done = int("done") ?: 0,
             total = int("total") ?: 0,
@@ -160,3 +160,35 @@ fun decodePlaybackLiveSubtitleEvent(name: String, payload: JsonObject): Playback
         else -> null
     }
 }
+
+// Tags such as <i>, </b>, <font color="...">, WebVTT <c.yellow> and <v Name>.
+private val LIVE_CUE_TAG = Regex("""</?[A-Za-z][^<>]*>""")
+// WebVTT karaoke timestamps such as <00:01:02.500>.
+private val LIVE_CUE_TIMESTAMP = Regex("""<\d[\d:.]*>""")
+// ASS override blocks such as {\an8} or {\i1}.
+private val LIVE_CUE_ASS_OVERRIDE = Regex("""\{\\[^}]*\}""")
+
+/**
+ * Fork: the text to draw for a live cue. The server streams the source
+ * subtitle's lines verbatim, so SRT/WebVTT tags and ASS overrides would show
+ * literally; they are removed here (styling such as italics is dropped), ASS
+ * line breaks become newlines and the common HTML entities are decoded.
+ */
+fun liveCueDisplayText(raw: String): String {
+    if (raw.isEmpty()) return raw
+    return raw
+        .replace(LIVE_CUE_ASS_OVERRIDE, "")
+        .replace(LIVE_CUE_TAG, "")
+        .replace(LIVE_CUE_TIMESTAMP, "")
+        .replace("\\N", "\n")
+        .replace("\\n", "\n")
+        .replace("\\h", " ")
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
+        .replace("&nbsp;", " ")
+        .replace("&amp;", "&")
+        .lines()
+        .joinToString("\n") { it.trim() }
+        .trim('\n')
+}
+
