@@ -374,6 +374,10 @@ class PlaybackCapabilityDetector(
             // future path ever fabricates part of them, the tier has to drop
             // here — the server strictly validates plans against exact
             // evidence, and only exact evidence earns audio passthrough.
+            // Fork: the HEVC Level Override (MediaCodecCapabilitiesProbe) is a
+            // deliberate exception the user opts into: it raises the levels a
+            // real hardware decoder reports, and the server must validate
+            // against those raised levels for the override to work at all.
             videoEvidence = CAPABILITY_EVIDENCE_EXACT,
             audioEvidence = if (platformAudio.exact) {
                 CAPABILITY_EVIDENCE_EXACT

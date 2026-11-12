@@ -751,6 +751,8 @@ internal object TvPlayerErrors {
     const val TRANSLATION_FAILED = "Translation failed"
     const val TRANSLATED_NOT_REFRESHED = "Translated, but the subtitle list could not be refreshed."
     const val PROCESSING_IN_BACKGROUND = "Processing in background"
+    // Fork: the server did not confirm a cancel.
+    const val AI_CANCEL_FAILED = "Couldn't cancel AI subtitles. The job may still finish and add its track."
 
     @StringRes
     fun res(english: String): Int? = when (english) {
@@ -784,6 +786,7 @@ internal object TvPlayerErrors {
         TRANSLATION_FAILED -> CommonR.string.player_subtitleTools_translationFailed
         TRANSLATED_NOT_REFRESHED -> CommonR.string.player_subtitleTools_translatedNotRefreshed
         PROCESSING_IN_BACKGROUND -> CommonR.string.player_subtitleTools_processingInBackground
+        AI_CANCEL_FAILED -> CommonR.string.fork_aiSubtitles_cancelFailed
         // The shared terminal fallback, for paths that keep only the English (a replacement-load toast).
         SERVER_TERMINAL_FALLBACK_MESSAGE -> CommonR.string.player_error_playbackUnavailable
         else -> null
@@ -2098,6 +2101,9 @@ class TvPlayerViewModel(
     private val _liveSubtitle = MutableStateFlow<LiveSubtitleTrack?>(null)
     val liveSubtitle: StateFlow<LiveSubtitleTrack?> = _liveSubtitle.asStateFlow()
     private var liveSubtitleFallbackClear: Job? = null
+    // Jobs whose live lines stay hidden: cancelled, finished, or the viewer
+    // picked another subtitle track or Off while they ran.
+    private val liveSubtitleDismissals = org.siloserver.silo.playback.LiveSubtitleDismissals()
     private var pendingAuthoritativeSubtitleDownloadId: Int? = null
     private val authoritativeSubtitleReadyRows = mutableMapOf<Pair<String, Int>, PlayerSubtitleInfo>()
     private val subtitleRemountReselection = SubtitleRemountReselection()
@@ -5244,6 +5250,7 @@ class TvPlayerViewModel(
         )
         if (identity != null) {
             _pendingRemoteSubtitleIndex.compareAndSet(index, null)
+            dismissLiveSubtitleForSelection()
             subtitleChoiceGeneration += 1
             rememberSeriesSubtitleChoice(identity)
             playbackMutationFence.beginReplan()
@@ -6324,6 +6331,8 @@ class TvPlayerViewModel(
     }
 
     fun selectSubtitleOption(identity: SubtitleIdentity) {
+        // Fork: the live AI lines give way to the pick.
+        dismissLiveSubtitleForSelection()
         manualSubtitleSelectionApplied = true
         subtitleChoiceGeneration += 1
         // The viewer is choosing: drop the automatic marker so this commit
@@ -7032,6 +7041,7 @@ class TvPlayerViewModel(
         if (event.sessionId != null && event.sessionId != state.sessionId) return
         if (event.fileId != null && state.mediaFileId != null && event.fileId != state.mediaFileId) return
         activeAiJobId?.let { if (it != event.jobId) return }
+        if (liveSubtitleDismissals.isDismissed(event.jobId)) return
         when (event) {
             is PlaybackLiveSubtitleEvent.Started -> {
                 liveSubtitleFallbackClear?.cancel()
@@ -7065,11 +7075,27 @@ class TvPlayerViewModel(
                 liveSubtitleFallbackClear?.cancel()
                 liveSubtitleFallbackClear = viewModelScope.launch {
                     delay(LIVE_SUBTITLE_COMPLETED_GRACE_MS)
-                    clearLiveSubtitle(event.jobId)
+                    dismissLiveSubtitle(event.jobId)
                 }
             }
-            is PlaybackLiveSubtitleEvent.Failed -> clearLiveSubtitle(event.jobId)
+            is PlaybackLiveSubtitleEvent.Failed -> dismissLiveSubtitle(event.jobId)
         }
+    }
+
+    /** Stops drawing [jobId]'s live lines and ignores its later batches. */
+    private fun dismissLiveSubtitle(jobId: Long) {
+        liveSubtitleDismissals.dismiss(jobId)
+        clearLiveSubtitle(jobId)
+    }
+
+    /**
+     * The viewer picked a subtitle track or Off: hide the running job's live
+     * lines so the pick shows. The job keeps running and its finished track
+     * still lands in the list, without being selected over the pick.
+     */
+    private fun dismissLiveSubtitleForSelection() {
+        val jobId = activeAiJobId ?: _liveSubtitle.value?.jobId ?: return
+        dismissLiveSubtitle(jobId)
     }
 
     /** Stops drawing live AI subtitles (for [jobId] only, when given). */
@@ -7266,6 +7292,20 @@ class TvPlayerViewModel(
         )
     }
 
+    /**
+     * Fork: `subtitle_translation_completed` carries the finished track's
+     * inventory row. Applied like `subtitle_ready` when that row is not
+     * listed yet; a malformed row is ignored here (no replan), since the job
+     * poll's own fallback still covers it.
+     */
+    internal suspend fun applyAiCompletedSubtitleTrack(update: PlaybackSubtitleReady) {
+        val trackId = update.track?.trackId?.takeIf { it.isNotBlank() } ?: return
+        val state = _uiState.value
+        if (state.subtitleUrls.any { it.serverTrackId == trackId }) return
+        if (applyAuthoritativeSubtitleReadyTrack(state.subtitleUrls, update) == null) return
+        applySubtitleReady(update)
+    }
+
     /** Applies one exact server-minted V3 inventory row from realtime. */
     internal suspend fun applySubtitleReady(update: PlaybackSubtitleReady): Boolean {
         val state = _uiState.value
@@ -7440,6 +7480,8 @@ class TvPlayerViewModel(
             aiCancelOwner = job.id to owner
             activeAiJobId = job.id
             activeAiJobKind = job.kind
+            // A repeat request can land on a job dismissed earlier.
+            liveSubtitleDismissals.restore(job.id)
             _aiTranslate.update {
                 it.copy(phase = AiJobPhase.Running(job.progress, job.progressMessage.ifBlank { null }))
             }
@@ -7457,20 +7499,25 @@ class TvPlayerViewModel(
                     }
                 },
             )
+            // Cleared before the ownership check too: a stale id would drop
+            // the next job's start event, which can beat its HTTP reply.
+            if (activeAiJobId == job.id) activeAiJobId = null
             if (!ownsRequest()) {
-                clearLiveSubtitle(job.id)
+                dismissLiveSubtitle(job.id)
                 return@launch
             }
-            activeAiJobId = null
             when (outcome) {
                 is SubtitlesRepository.SubtitleJobOutcome.Completed -> {
+                    // A viewer who picked another track while the job ran
+                    // keeps that pick; the new track is only listed.
+                    val keepPick = liveSubtitleDismissals.isDismissed(job.id)
                     val merged = refreshSubtitles(
-                        autoSelectSubtitleId = outcome.resultSubtitleId,
+                        autoSelectSubtitleId = outcome.resultSubtitleId.takeUnless { keepPick },
                         source = TvSubtitleRefreshSource.AiCompletion,
                     )
                     // The finished track is selected now (or the replan
                     // fallback will load it); stop drawing the live copy.
-                    clearLiveSubtitle(job.id)
+                    dismissLiveSubtitle(job.id)
                     if (!ownsRequest()) return@launch
                     _aiTranslate.update {
                         if (merged) {
@@ -7485,7 +7532,7 @@ class TvPlayerViewModel(
                     }
                 }
                 is SubtitlesRepository.SubtitleJobOutcome.Failed -> {
-                    clearLiveSubtitle(job.id)
+                    dismissLiveSubtitle(job.id)
                     val message = outcome.message ?: TvPlayerErrors.TRANSLATION_FAILED
                     _aiTranslate.update { it.copy(phase = AiJobPhase.Failed(message)) }
                     // The dialog may have been closed while the job ran; a reason
@@ -7493,7 +7540,7 @@ class TvPlayerViewModel(
                     if (!_uiState.value.showAiTranslateDialog) showPlayerMessage(aiFailureNotice(message), 10_000L)
                 }
                 SubtitlesRepository.SubtitleJobOutcome.Cancelled -> {
-                    clearLiveSubtitle(job.id)
+                    dismissLiveSubtitle(job.id)
                     _aiTranslate.update { it.copy(phase = AiJobPhase.Idle) }
                 }
             }
@@ -7507,10 +7554,21 @@ class TvPlayerViewModel(
         aiJobPollJob?.cancel()
         aiJobPollJob = null
         activeAiJobId = null
+        // Batches already in flight, or every batch if the cancel request
+        // fails, must not bring the lines back.
+        jobId?.let(liveSubtitleDismissals::dismiss)
         clearLiveSubtitle()
         _aiTranslate.update { it.copy(phase = AiJobPhase.Idle) }
         if (jobId != null && owner != null) {
-            viewModelScope.launch { subtitlesRepository.cancelJob(jobId, owner) }
+            viewModelScope.launch {
+                if (subtitlesRepository.cancelJob(jobId, owner) !is ApiResult.Success) {
+                    showPlayerMessage(
+                        TvPlayerErrors.AI_CANCEL_FAILED,
+                        durationMs = 10_000L,
+                        textRes = CommonR.string.fork_aiSubtitles_cancelFailed,
+                    )
+                }
+            }
         }
     }
 
