@@ -57,4 +57,23 @@ class PlaybackLiveSubtitlesTest {
         assertTrue(track.textAt(0.0).isEmpty())
         assertTrue(track.textAt(200.0).isEmpty())
     }
+
+    @Test fun stripsSubtitleMarkupFromLiveCues() {
+        assertEquals("Kje si bil?", liveCueDisplayText("<i>Kje si bil?</i>"))
+        assertEquals("Napis", liveCueDisplayText("{\\an8}Napis"))
+        assertEquals("Red text", liveCueDisplayText("<font color=\"#ff0000\">Red</font> <b>text</b>"))
+        assertEquals("Hello there", liveCueDisplayText("<v Bob><c.yellow>Hello</c> <00:00:01.500>there"))
+        assertEquals("one\ntwo", liveCueDisplayText("one\\Ntwo"))
+        assertEquals("a < b & c", liveCueDisplayText("a &lt; b &amp; c"))
+        assertEquals("3 < 4 > 2", liveCueDisplayText("3 < 4 > 2"))
+        assertEquals("", liveCueDisplayText("<i></i>"))
+    }
+
+    @Test fun decodedCuesCarryDisplayText() {
+        val event = decodePlaybackLiveSubtitleEvent(
+            "subtitle_translation_cues",
+            obj("""{"job_id":1,"cues":[{"start":1,"end":2,"text":"<i>Zdravo</i>"}]}"""),
+        )
+        assertEquals(listOf(LiveSubtitleCue(1.0, 2.0, "Zdravo")), assertIs<PlaybackLiveSubtitleEvent.Cues>(event).cues)
+    }
 }
