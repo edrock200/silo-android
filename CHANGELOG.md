@@ -6,6 +6,57 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 34) — 2026-11-12 (review fixes)
+
+Fixes from a full code review of the fork's own features. Based on the same
+upstream code as build 33.
+
+### Admin console
+
+- Every change now asks before it is sent. Before, one OK press on the TV
+  could start a backup restore, merge items or rotate a secret.
+- Clearing a field now really clears it on the server (for example removing
+  a profile PIN or rating limit), instead of reporting success and changing
+  nothing.
+- "Someone else changed this record" errors can be recovered from with
+  "Reload current values", and eight settings that always failed with that
+  error can be saved now.
+- Passwords, tokens and API keys are hidden while you type them (the phone
+  has a show/hide button).
+- Lists keep their place when you go back, "load more" no longer mixes in
+  pages from an old filter, polling stops while the app is in the
+  background, and the Admin menu item no longer gets stuck hidden after a
+  network blip.
+- Item actions find the right item more often, list filters with several
+  values work, and download-only server operations are no longer offered.
+
+### AI subtitles
+
+- Choosing another subtitle track, or Off, now hides the live AI lines.
+  The finished AI track still appears in the list without replacing your
+  choice.
+- Languages the app's short list doesn't name (Norwegian, Catalan, Serbian,
+  Cantonese, Brazilian Portuguese and others) are translated again instead
+  of only being transcribed.
+- Live lines follow your subtitle size, colour and position settings, show
+  without stray formatting tags, and no longer hide the regular subtitles
+  between lines.
+- A retried request can no longer start a second AI job for the same
+  subtitles, and a cancelled job's late lines no longer come back.
+
+### HEVC Level Override
+
+- The setting shows what your decoder reports and only offers higher levels.
+  It no longer changes software decoders or decoders with no level limit.
+
+### Trailers and TV
+
+- The in-app trailer player hands off to the YouTube app at once when
+  YouTube can't load, no longer opens YouTube while the app is in the
+  background, lets the screen sleep while paused, and ignores remote presses
+  until the player is ready. The TV Trailer button follows the app language.
+- The TV asks for the microphone once per install instead of every launch.
+
 ## 1.2.0-hevc (build 33) — 2026-11-12
 
 Based on upstream `main` at `e8c10f1db` (public version 1.2.0, tester build
