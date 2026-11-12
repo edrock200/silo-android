@@ -6,7 +6,7 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
-## 1.2.0-hevc (build 31, rebuilt) — 2026-11-12 (live subtitles on phone)
+## 1.2.0-hevc (build 32) — 2026-11-12 (live subtitles on phone)
 
 ### Added in this fork
 
