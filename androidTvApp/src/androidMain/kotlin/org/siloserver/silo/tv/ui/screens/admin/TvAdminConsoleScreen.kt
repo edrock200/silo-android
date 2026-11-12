@@ -206,11 +206,15 @@ fun TvAdminConsoleScreen(
     if (run != null && run.phase == AdminRunPhase.Confirming) {
         TvDialog(
             title = "${run.operation.title}?",
-            message = run.operation.summary?.takeIf { it.isNotBlank() } ?: "This changes the server and may not be undoable.",
+            message = run.confirmMessage,
             onDismissRequest = { viewModel.cancelConfirm(run.id) },
             actions = listOf(
                 TvDialogAction("Cancel", { viewModel.cancelConfirm(run.id) }),
-                TvDialogAction("Continue", { viewModel.submit(run.id) }, TvDialogActionStyle.Destructive),
+                TvDialogAction(
+                    "Continue",
+                    { viewModel.submit(run.id) },
+                    if (run.operation.isDestructive) TvDialogActionStyle.Destructive else TvDialogActionStyle.Primary,
+                ),
             ),
             initialFocusIndex = 0,
         )
@@ -319,8 +323,10 @@ private fun RunContent(
     val showForm = run.phase == AdminRunPhase.Editing || run.phase == AdminRunPhase.Confirming
     if (showForm) {
         val fields = run.form.fields
-        Page(firstRow) {
-            run.error?.let { item { Banner(it, Destructive) } }
+        // A read's button comes first, so filters can be skipped. A change's
+        // comes after its fields, so the first OK press doesn't send it.
+        val submitFirst = run.operation.isRead || !run.form.hasInputs
+        val submitRow: LazyListScope.() -> Unit = {
             item {
                 TvRow(
                     title = if (run.operation.isRead) "Show results" else run.operation.title,
@@ -329,6 +335,10 @@ private fun RunContent(
                     chevron = false,
                 ) { vm.submit(run.id) }
             }
+        }
+        Page(firstRow) {
+            run.error?.let { item { Banner(it, Destructive) } }
+            if (submitFirst) submitRow()
             run.operation.description?.takeIf { it.isNotBlank() }?.let { item { Footnote(it) } }
             if (run.form.bodyIsRawJson) {
                 item {
@@ -373,6 +383,7 @@ private fun RunContent(
                     }
                 }
             }
+            if (!submitFirst) submitRow()
         }
         return
     }
