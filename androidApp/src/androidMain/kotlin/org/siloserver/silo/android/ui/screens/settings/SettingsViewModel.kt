@@ -146,6 +146,8 @@ data class SettingsUiState(
     val resumeRewindSeconds: Int = 7,
     val passOutThreshold: Int = 3,
     val hevcLevelOverride: Int = 0,
+    /** Fork: the highest HEVC level the hardware decoder reports, null when unknown. */
+    val hevcDecoderMaxLevel: Int? = null,
 
     // Downloads
     val downloadsWifiOnly: Boolean = true,
@@ -433,6 +435,11 @@ class SettingsViewModel(
         playerSettingsStore.hevcLevelOverrideFlow
             .onEach { level -> _uiState.update { it.copy(hevcLevelOverride = level) } }
             .launchIn(viewModelScope)
+        // Fork: the decoder's own HEVC level, for the override picker.
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.Default) {
+            val max = runCatching { org.siloserver.silo.common.player.MediaCodecCapabilitiesProbe.hardwareHevcMaxLevel() }.getOrNull()
+            _uiState.update { it.copy(hevcDecoderMaxLevel = max) }
+        }
     }
 
     fun setHevcLevelOverride(value: Int) {
