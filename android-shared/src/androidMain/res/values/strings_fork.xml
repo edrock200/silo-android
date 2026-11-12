@@ -4,4 +4,10 @@
     <string name="fork_liveSubtitle_transcribing">Transcribing…</string>
     <string name="fork_liveSubtitle_translating">Translating subtitles…</string>
     <string name="fork_aiSubtitles_cancelFailed">Couldn\'t cancel AI subtitles. The job may still finish and add its track.</string>
+    <string name="fork_settings_decoder_title">Decoder</string>
+    <string name="fork_hevcLevelOverride_title">HEVC Level Override</string>
+    <string name="fork_hevcLevelOverride_auto">Auto</string>
+    <string name="fork_hevcLevelOverride_autoWithDecoder">Auto (decoder reports %1$s)</string>
+    <string name="fork_hevcLevelOverride_level">Level %1$s</string>
+    <string name="fork_hevcLevelOverride_footer">HEVC Level Override reports a higher HEVC level than this device\'s decoder advertises, so the server direct plays files tagged above it (such as level 6.1) instead of transcoding them. The server still applies the decoder\'s resolution, frame rate, bitrate and bit depth limits. Files that truly exceed the decoder may stutter or fail.</string>
 </resources>
