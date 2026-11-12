@@ -7292,6 +7292,20 @@ class TvPlayerViewModel(
         )
     }
 
+    /**
+     * Fork: `subtitle_translation_completed` carries the finished track's
+     * inventory row. Applied like `subtitle_ready` when that row is not
+     * listed yet; a malformed row is ignored here (no replan), since the job
+     * poll's own fallback still covers it.
+     */
+    internal suspend fun applyAiCompletedSubtitleTrack(update: PlaybackSubtitleReady) {
+        val trackId = update.track?.trackId?.takeIf { it.isNotBlank() } ?: return
+        val state = _uiState.value
+        if (state.subtitleUrls.any { it.serverTrackId == trackId }) return
+        if (applyAuthoritativeSubtitleReadyTrack(state.subtitleUrls, update) == null) return
+        applySubtitleReady(update)
+    }
+
     /** Applies one exact server-minted V3 inventory row from realtime. */
     internal suspend fun applySubtitleReady(update: PlaybackSubtitleReady): Boolean {
         val state = _uiState.value
