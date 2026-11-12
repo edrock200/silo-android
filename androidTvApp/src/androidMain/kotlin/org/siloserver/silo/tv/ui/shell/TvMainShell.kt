@@ -272,7 +272,8 @@ fun TvMainShell(
         activeServerEntry,
         currentEntry?.destination?.route == TvMainRoute.Home.route,
     ) {
-        value = runCatching { adminAccess.check() }.getOrDefault(org.siloserver.silo.common.admin.AdminAvailability.Unknown)
+        // Answered from AdminAccess's cache after the first time; retried while the server hasn't answered.
+        adminAccess.checkUntilKnown { value = it }
     }
     val adminVisible = adminAvailability == org.siloserver.silo.common.admin.AdminAvailability.Available ||
         adminAvailability == org.siloserver.silo.common.admin.AdminAvailability.NeedsPrimaryProfile
