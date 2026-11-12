@@ -62,14 +62,23 @@ for both apps.
   and `RequestMicrophonePermissionOnce()` (`androidTvApp/.../search/TvMicrophonePermission.kt`)
   called at the top of `TvSearchScreen`.
 
-- Live AI subtitles on TV: `shared/.../playback/PlaybackLiveSubtitles.kt`
+- Live AI subtitles on phone and TV: `shared/.../playback/PlaybackLiveSubtitles.kt`
   (decodes `subtitle_translation_started|cues|completed|failed` realtime
-  events; test `PlaybackLiveSubtitlesTest`), `TvPlaybackRealtimeController`
-  (routes them), `TvPlayerViewModel.applyLiveSubtitleEvent` / `liveSubtitle` /
-  `clearLiveSubtitle` (cleared when the AI job poll finishes),
-  `TvLiveSubtitleOverlay.kt`, and two hooks in `TvPlayerScreen` (hide Media3's
-  subtitle view while live, draw the overlay). Drop it if upstream adds live
-  cues itself.
+  events, which the server also sends for transcriptions; test
+  `PlaybackLiveSubtitlesTest`), the overlay
+  `android-shared/.../common/player/LiveSubtitleOverlay.kt` (one style per
+  device; waiting text from `res/values/strings_fork.xml`), routing in
+  `TvPlaybackRealtimeController` and phone `PlaybackRealtimeController`,
+  `applyLiveSubtitleEvent` / `liveSubtitle` / `clearLiveSubtitle` in
+  `TvPlayerViewModel` and phone `PlayerViewModel` (cleared when the AI job
+  poll finishes), and hooks in `TvPlayerScreen` / phone `PlayerScreen` (hide
+  Media3's subtitle view while live, draw the overlay) plus phone
+  `PlayerOverlay` (closes the AI sheet on the first lines). Drop it if
+  upstream adds live cues itself.
+- Transcription without a translation pass for untagged audio:
+  `android-shared/.../common/player/AiTranscribePlan.kt` (`aiTranscribePlan`,
+  test `AiTranscribePlanTest`, uses `LanguageNames.isKnown`), called by TV
+  `TvAiTranslateDialog` and phone `AiTranslateSheet`.
 
 - Admin console (phone and TV): generic screens built from the bundled spec
   `android-shared/src/androidMain/assets/admin/openapi-admin.json`, made by
