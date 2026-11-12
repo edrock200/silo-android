@@ -2,6 +2,7 @@
 
 package org.siloserver.silo.tv.ui.screens.player
 
+import org.siloserver.silo.model.subtitles.SubtitleAiJobKind
 import org.siloserver.silo.common.R as CommonR
 import org.siloserver.silo.common.diagnostics.DiagnosticsPlaybackLogger
 import org.siloserver.silo.common.diagnostics.DiagnosticsSeekEvent
@@ -2088,6 +2089,8 @@ class TvPlayerViewModel(
     private var aiStatusRequested = false
     private var aiJobPollJob: Job? = null
     private var activeAiJobId: Long? = null
+    // Fork: the running job's kind, so the live overlay says Transcribing.
+    private var activeAiJobKind: String? = null
 
     // Fork: live AI subtitles. The server streams a running job's output over
     // the session socket, playhead first; the screen draws it until the
@@ -7039,11 +7042,17 @@ class TvPlayerViewModel(
                     language = event.language,
                     label = event.label,
                     total = event.totalCues,
+                    transcribing = activeAiJobKind == SubtitleAiJobKind.Transcribe,
                 )
             }
             is PlaybackLiveSubtitleEvent.Cues -> {
                 val current = _liveSubtitle.value?.takeIf { it.jobId == event.jobId }
-                    ?: LiveSubtitleTrack(sessionId = state.sessionId, jobId = event.jobId, trackKey = event.trackKey)
+                    ?: LiveSubtitleTrack(
+                        sessionId = state.sessionId,
+                        jobId = event.jobId,
+                        trackKey = event.trackKey,
+                        transcribing = activeAiJobKind == SubtitleAiJobKind.Transcribe,
+                    )
                 val firstCues = current.cues.isEmpty() && event.cues.isNotEmpty()
                 _liveSubtitle.value = current.plus(event.cues, event.done, event.total)
                 if (firstCues && _uiState.value.showAiTranslateDialog) closeAiTranslateDialog()
@@ -7395,6 +7404,8 @@ class TvPlayerViewModel(
                 return samePlayback() && owner.isSameIdentityAs(now) && owner.profileId == now?.profileId && owner.profileToken == now?.profileToken
             }
             if (!ownsRequest()) return@launch
+            // Set before the request: the server's start event can beat its reply.
+            activeAiJobKind = kind
             val request = SubtitleTranslateRequest(
                 mediaFileId = mediaFileId,
                 kind = kind,
@@ -7428,6 +7439,7 @@ class TvPlayerViewModel(
             }
             aiCancelOwner = job.id to owner
             activeAiJobId = job.id
+            activeAiJobKind = job.kind
             _aiTranslate.update {
                 it.copy(phase = AiJobPhase.Running(job.progress, job.progressMessage.ifBlank { null }))
             }
