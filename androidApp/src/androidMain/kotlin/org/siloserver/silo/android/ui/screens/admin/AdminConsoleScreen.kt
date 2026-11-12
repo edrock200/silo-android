@@ -229,7 +229,7 @@ private fun RunContent(run: AdminEntry.Run, vm: AdminConsoleViewModel) {
     if (run.phase == AdminRunPhase.Confirming) {
         SiloConfirmDialog(
             title = "${run.operation.title}?",
-            body = run.operation.summary?.takeIf { it.isNotBlank() } ?: "This changes the server and may not be undoable.",
+            body = run.confirmMessage,
             confirmLabel = "Continue",
             onConfirm = { vm.submit(run.id) },
             onDismiss = { vm.cancelConfirm(run.id) },
