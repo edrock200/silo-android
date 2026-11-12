@@ -192,3 +192,26 @@ fun liveCueDisplayText(raw: String): String {
         .trim('\n')
 }
 
+/**
+ * Fork: AI jobs whose live lines must not be drawn any more: the viewer
+ * cancelled the job, picked another subtitle track or Off while it ran, or
+ * its poll already reached a terminal state. Late batches for these jobs are
+ * dropped instead of bringing the overlay back. [restore] undoes it when the
+ * same job is started again (the server collapses a repeat request onto the
+ * running job). Keeps only the most recent [capacity] ids.
+ */
+class LiveSubtitleDismissals(private val capacity: Int = 16) {
+    private val ids = ArrayDeque<Long>()
+
+    fun dismiss(jobId: Long) {
+        if (jobId in ids) return
+        ids.addLast(jobId)
+        while (ids.size > capacity) ids.removeFirst()
+    }
+
+    fun isDismissed(jobId: Long): Boolean = jobId in ids
+
+    fun restore(jobId: Long) {
+        ids.remove(jobId)
+    }
+}

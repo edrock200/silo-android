@@ -3,4 +3,5 @@
 <resources>
     <string name="fork_liveSubtitle_transcribing">Transcribing…</string>
     <string name="fork_liveSubtitle_translating">Translating subtitles…</string>
+    <string name="fork_aiSubtitles_cancelFailed">Couldn\'t cancel AI subtitles. The job may still finish and add its track.</string>
 </resources>
