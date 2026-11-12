@@ -6,6 +6,19 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 33) — 2026-11-12
+
+Based on upstream `main` at `e8c10f1db` (public version 1.2.0, tester build
+`v1.2.0-beta.31`). Fork changes are carried over. The admin spec was
+refreshed from silo-server `0b579aa6` (the catalog capabilities now report
+whether item metadata can be reset).
+
+### Upstream changes since the previous build
+
+- fix(player): keep the end time moving while paused and add it to phones (#875)
+- feat(browse): jump to a letter in title-ordered library grids on phone and tablet (#888)
+- fix(tv): reset the still-watching count when the viewer pauses or seeks (#876)
+
 ## 1.2.0-hevc (build 32) — 2026-11-12 (live subtitles on phone)
 
 ### Added in this fork
