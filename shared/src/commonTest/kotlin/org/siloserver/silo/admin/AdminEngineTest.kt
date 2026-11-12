@@ -170,6 +170,9 @@ class AdminEngineTest {
     @Test
     fun deletesAndUpdatesAreFlagged() {
         assertTrue(op("DELETE", "users/{id}").isDestructive)
+        assertTrue(op("PATCH", "users/{id}").needsConfirmation, "every change is confirmed")
+        assertTrue(!op("GET", "users/{id}").needsConfirmation && !op("GET", "users/{id}").isDestructive)
+        assertTrue(bop("PUT", "nodes/{id}").needsConfirmation)
         assertTrue(op("PATCH", "users/{id}").needsIfMatch)
         assertEquals("Update user", op("PATCH", "users/{id}").title)
     }

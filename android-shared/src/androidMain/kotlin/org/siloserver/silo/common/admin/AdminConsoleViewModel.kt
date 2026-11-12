@@ -102,6 +102,11 @@ sealed interface AdminEntry {
         override val title: String get() = bound.operation.title
         val operation: AdminOperation get() = bound.operation
         val isList: Boolean get() = response != null && AdminDisplay.page(response.body) != null
+
+        /** What the confirmation says before a change is sent. */
+        val confirmMessage: String
+            get() = operation.summary?.takeIf { it.isNotBlank() }
+                ?: if (operation.isDestructive) "This changes the server and may not be undoable." else "This changes the server."
     }
 
     /** A record shown from a list or a nested value; [actions] apply to it. */
@@ -117,7 +122,7 @@ enum class AdminRunPhase {
     Preparing,
     /** The form is shown; nothing sent yet. */
     Editing,
-    /** A destructive call waits for the user to confirm. */
+    /** A change waits for the user to confirm. */
     Confirming,
     Sending,
     Done,
@@ -249,14 +254,14 @@ class AdminConsoleViewModel(
         it.copy(values = it.values + (key to value), error = null)
     }
 
-    /** Sends the form; a destructive call asks first. */
+    /** Sends the form; a change (anything but a read) asks first. */
     fun submit(runId: Long) {
         val run = findRun(runId) ?: return
         run.form.build(run.values).onFailure { e ->
             updateRun(runId) { it.copy(error = e.message) }
             return
         }
-        if (run.operation.isDestructive && run.phase != AdminRunPhase.Confirming) {
+        if (run.operation.needsConfirmation && run.phase != AdminRunPhase.Confirming) {
             updateRun(runId) { it.copy(phase = AdminRunPhase.Confirming, error = null) }
             return
         }

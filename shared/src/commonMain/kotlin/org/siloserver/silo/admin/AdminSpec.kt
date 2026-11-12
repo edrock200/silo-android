@@ -138,9 +138,15 @@ class AdminOperation(
     val isRead: Boolean get() = method == "GET"
     val isDelete: Boolean get() = method == "DELETE"
 
-    /** Changes or removes something: delete, plus actions the name marks as such. */
+    /** Changes the server; the console asks before sending it. */
+    val needsConfirmation: Boolean get() = !isRead
+
+    /**
+     * Removes, overwrites or interrupts something: delete, plus changes the
+     * name marks as such. Shown in red; every change is confirmed either way.
+     */
     val isDestructive: Boolean
-        get() = isDelete || DESTRUCTIVE_WORDS.any { operationId.contains(it, ignoreCase = true) }
+        get() = !isRead && (isDelete || DESTRUCTIVE_WORDS.any { operationId.contains(it, ignoreCase = true) })
 
     val successSchema: AdminSchema? get() = responses.entries.sortedBy { it.key }.firstOrNull { it.value != null }?.value
 
@@ -153,7 +159,11 @@ class AdminOperation(
     override fun toString(): String = "$method $path"
 
     companion object {
-        private val DESTRUCTIVE_WORDS = listOf("delete", "remove", "reset", "restart", "purge", "revoke", "wipe", "clear", "disable")
+        private val DESTRUCTIVE_WORDS = listOf(
+            "delete", "remove", "reset", "restart", "purge", "revoke", "wipe", "clear", "disable", "restore",
+            "terminate", "stop", "rotate", "drain", "cancel", "decline", "cleanup", "regenerate", "replace",
+            "merge", "uninstall", "import",
+        )
 
         internal fun parse(spec: AdminSpec, method: String, path: String, op: JsonObject): AdminOperation {
             fun str(o: JsonObject, key: String) = (o[key] as? JsonPrimitive)?.contentOrNull
