@@ -78,7 +78,17 @@ for both apps.
 - Transcription without a translation pass for untagged audio:
   `android-shared/.../common/player/AiTranscribePlan.kt` (`aiTranscribePlan`,
   test `AiTranscribePlanTest`, uses `LanguageNames.isKnown`), called by TV
-  `TvAiTranslateDialog` and phone `AiTranslateSheet`.
+  `TvAiTranslateDialog` and phone `AiTranslateSheet`. Untagged means blank,
+  `und`/`unk`/`mis`/`zxx`/`mul` or not a 2-3 letter code; tagged languages
+  missing from `LanguageNames` still translate.
+- Review fixes (build 34): `LiveSubtitleDismissals` in `PlaybackLiveSubtitles.kt`
+  (subtitle picks dismiss the live overlay), `liveCueDisplayText`, the
+  uncertain-request adoption in `SubtitleAiCreateV2Api` (`lostJobFor`),
+  `common/settings/HevcLevelOverrideOptions.kt` and
+  `MediaCodecCapabilitiesProbe.hardwareHevcMaxLevel()`, the admin console's
+  confirm-every-change, clearing fields, If-Match recovery and name-based
+  credential masking (`AdminForm.kindFor(schema, name)`), and the trailer
+  page's per-launch bridge token in `YoutubeTrailerActivity`.
 
 - Admin console (phone and TV): generic screens built from the bundled spec
   `android-shared/src/androidMain/assets/admin/openapi-admin.json`, made by
