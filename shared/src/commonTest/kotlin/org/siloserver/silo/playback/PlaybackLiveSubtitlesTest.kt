@@ -90,4 +90,15 @@ class PlaybackLiveSubtitlesTest {
         assertTrue(!dismissals.isDismissed(1), "oldest id drops past capacity")
         assertTrue(dismissals.isDismissed(2) && dismissals.isDismissed(3))
     }
+
+    @Test fun coversLiveCuesAndShortPausesButNotUnfilledRegions() {
+        val track = LiveSubtitleTrack(sessionId = "s", jobId = 1, trackKey = "k")
+            .plus(listOf(LiveSubtitleCue(100.0, 102.0, "a"), LiveSubtitleCue(105.0, 107.0, "b")), done = 2, total = 10)
+        assertTrue(track.covers(101.0))
+        assertTrue(track.covers(103.5), "pause between two live cues")
+        assertTrue(track.covers(97.0), "just before the first live cue")
+        assertTrue(!track.covers(50.0), "region the job has not reached")
+        assertTrue(!track.covers(120.0))
+        assertTrue(!LiveSubtitleTrack(sessionId = "s", jobId = 1, trackKey = "k").covers(0.0))
+    }
 }
