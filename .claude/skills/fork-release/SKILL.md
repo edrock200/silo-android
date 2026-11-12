@@ -139,9 +139,17 @@ for both apps.
 3. **Version.** Find the public version from the tags:
    `python3 -I scripts/release-version.py beta <newest vX.Y.Z-beta.B tag>`
    prints `version`, `build` and `version_code`. The `v1.0.1-rc.*` tags are
-   older than the `1.0.0` builds; trust the script, not tag names. Use
-   `siloVersionName=<version>-hevc`, `siloBuildNumber=<build>`, and
-   `siloVersionCode=<version_code>`.
+   older than the `1.0.0` builds; trust the script, not tag names.
+   **Every published fork build gets a new build number** (owner decision,
+   2026-11-12): take the newest build in `CHANGELOG.md` (the `(build N` of
+   its top heading), and use `B = max(N + 1, upstream build)`. Never
+   republish under a number already used, and don't write "rebuilt"
+   headings any more. Then `version_code = 100000000 + (major*10000 +
+   minor*100 + patch)*1000 + B` (the script's formula; B must stay at or
+   below 999). Use `siloVersionName=<version>-hevc`, `siloBuildNumber=B` and
+   `siloVersionCode=<version_code>`; Settings shows it as
+   `<version>-hevc (B)`. When the public version changes (say 1.2.0 to
+   1.3.0), B still follows this rule, so it keeps rising.
 4. **Build** release APKs, never debug (debug builds are much slower on TV).
    Build one app at a time; building both together runs out of memory:
 
