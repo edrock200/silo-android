@@ -184,4 +184,41 @@ class MediaCodecCapabilitiesProbeTest {
         assertEquals(6, MediaCodecCapabilitiesProbe.normalizedLevel("dolby_vision", CodecProfileLevel.DolbyVisionLevelUhd24))
         assertNull(MediaCodecCapabilitiesProbe.dolbyVisionLevelNumber(0))
     }
+
+    private fun probeResultOf(vararg capabilities: org.siloserver.silo.model.playback.VideoDecodeCapability) =
+        MediaCodecCapabilitiesProbe.ProbeResult(
+            videoCodecs = capabilities.map { it.codec }.toSet(),
+            videoDecodeCapabilities = capabilities.toList(),
+            hdr = org.siloserver.silo.model.playback.HdrCapabilities(),
+            maxResolution = "2160p",
+            supportsDvProfile7 = false,
+        )
+
+    @Test
+    fun `HEVC level override raises a bounded hardware decoder`() {
+        val hevc = org.siloserver.silo.model.playback.VideoDecodeCapability(codec = "hevc", levels = listOf(120, 150), hardware = true)
+        val result = MediaCodecCapabilitiesProbe.withHevcLevelOverride(probeResultOf(hevc), 183)
+        val levels = result.videoDecodeCapabilities.single().levels
+        assertTrue(183 in levels && 153 in levels && 180 in levels)
+        assertTrue(120 in levels)
+        assertEquals(levels.sorted(), levels)
+    }
+
+    @Test
+    fun `HEVC level override leaves unconstrained, software and other decoders alone`() {
+        val unconstrained = org.siloserver.silo.model.playback.VideoDecodeCapability(codec = "hevc", hardware = true)
+        val software = org.siloserver.silo.model.playback.VideoDecodeCapability(codec = "hevc", levels = listOf(150), hardware = false)
+        val avc = org.siloserver.silo.model.playback.VideoDecodeCapability(codec = "h264", levels = listOf(51), hardware = true)
+        val input = probeResultOf(unconstrained, software, avc)
+        assertEquals(input, MediaCodecCapabilitiesProbe.withHevcLevelOverride(input, 183))
+        assertEquals(input, MediaCodecCapabilitiesProbe.withHevcLevelOverride(input, 0))
+    }
+
+    @Test
+    fun `hardware HEVC max level ignores software decoders`() {
+        val hardware = org.siloserver.silo.model.playback.VideoDecodeCapability(codec = "hevc", levels = listOf(120, 153), hardware = true)
+        val software = org.siloserver.silo.model.playback.VideoDecodeCapability(codec = "hevc", levels = listOf(186), hardware = false)
+        assertEquals(153, MediaCodecCapabilitiesProbe.hardwareHevcMaxLevel(probeResultOf(hardware, software)))
+        assertNull(MediaCodecCapabilitiesProbe.hardwareHevcMaxLevel(probeResultOf(software)))
+    }
 }
