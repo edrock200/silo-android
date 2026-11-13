@@ -6,6 +6,16 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 35) — 2026-11-13
+
+### Added in this fork
+
+- **Remove from Continue Watching on the full row page.** Opening the
+  Continue Watching (or Next Up) row's "Explore all" page now lets you
+  remove a title from its card menu, on phone and TV, just like on the Home
+  row. The title leaves the page straight away and is gone from Home when
+  you go back.
+
 ## 1.2.0-hevc (build 34) — 2026-11-12 (review fixes)
 
 Fixes from a full code review of the fork's own features. Based on the same
