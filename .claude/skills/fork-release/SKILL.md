@@ -142,7 +142,11 @@ for both apps.
    - the generic console picks up everything else from the new asset with
      no code change.
    A spec change alone is a reason to publish a build even when upstream
-   Android has nothing new.
+   Android has nothing new. The script stamps `info.source` (server commit
+   and date) into the asset, so compare `paths` and `schemas` only: a change
+   to `info.source` alone is not a change; revert the file instead of
+   committing it. Upstream commits that touch only CI, docs or `.github/`
+   change nothing in the APKs and don't need a build either.
 2. **Rebase** the fork commits onto `upstream/main` and push them to a **new**
    branch, `feat/hevc-level-override-vN`. Force-pushing an existing branch is
    blocked in this environment.
