@@ -632,7 +632,7 @@ fun MainScreen(
                                 playVideo(contentId, resumePositionSeconds = resumePositionSeconds)
                             },
                             onExploreSection = { section ->
-                                navController.navigate(Route.SectionBrowse(section.id, context.sectionTitle(section)).route)
+                                navController.navigate(Route.SectionBrowse(section.id, context.sectionTitle(section), sectionType = section.sectionType).route)
                             },
                             onCollectionClick = { card ->
                                 sectionCollectionCardRoute(card)?.let { navController.navigate(it) }
