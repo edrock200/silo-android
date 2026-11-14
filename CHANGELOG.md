@@ -6,6 +6,24 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 36) — 2026-11-14
+
+Based on upstream `main` at `4686d6dd8` (public version 1.2.0, tester build
+`v1.2.0-beta.31`). Fork changes are carried over. The admin console's spec
+was refreshed from silo-server `4448e401`: the plugin list now shows each
+plugin's signature (source, state and when it was verified).
+
+### Upstream changes since the previous build
+
+- fix(detail): use a several-videos icon for the Version selector (#905)
+- fix(tv): let the keyboard Space bar pause and resume playback (#844)
+- feat(android): make watch-progress bars visible on bright artwork (#902)
+- build(deps): bump addressable from 2.9.0 to 2.9.1 (#904)
+- feat(detail): keep Version Auto inside the chosen edition on phone and TV (#899)
+- docs: require parity issues in the other Silo clients (#897)
+- ci: check translations without a silo-translations token (#895)
+- ci: require evidence on every pull request and close contributors' drafts (#894)
+
 ## 1.2.0-hevc (build 35) — 2026-11-13
 
 ### Added in this fork
