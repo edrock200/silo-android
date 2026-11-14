@@ -6,6 +6,15 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 37) — 2026-11-14 (afternoon sync)
+
+Based on upstream `main` at `cc4fd6662` (public version 1.2.0, tester build
+`v1.2.0-beta.31`). Fork changes are carried over; the admin spec is unchanged.
+
+### Upstream changes since the previous build
+
+- fix(overlays): scale card badges with text size and poster size (#912)
+
 ## 1.2.0-hevc (build 36) — 2026-11-14
 
 Based on upstream `main` at `4686d6dd8` (public version 1.2.0, tester build
