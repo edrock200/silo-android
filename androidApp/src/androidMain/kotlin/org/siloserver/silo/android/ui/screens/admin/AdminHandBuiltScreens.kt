@@ -283,6 +283,9 @@ private fun SessionCard(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
+                AdminText.sessionReasons(session)?.let {
+                    Text(it, color = SiloSecondaryText, fontSize = 13.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                }
             }
         }
         Spacer(Modifier.height(8.dp))
