@@ -127,7 +127,8 @@ object AdminText {
     fun taskLine(task: AdminTask): String {
         if (task.isRunning) {
             val pct = task.progress.coerceIn(0.0, 100.0).toInt()
-            return if (task.state == "cancelling") "Cancelling…" else "Running · $pct%"
+            val since = ago(task.startedAt)?.let { " · started $it" }.orEmpty()
+            return if (task.state == "cancelling") "Cancelling…$since" else "Running · $pct%$since"
         }
         val last = task.lastExecution
         val lastText = last?.let {
