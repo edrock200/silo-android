@@ -6,6 +6,18 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 40) — 2026-11-15 (evening)
+
+No new upstream Android changes. The admin spec was refreshed from
+silo-server `c9ce328b`.
+
+### Added in this fork
+
+- **Admin Dashboard shows why a stream is transcoded.** Each session under
+  Now playing now lists the server's reasons in plain words, such as "video
+  codec not supported", "not enough bandwidth" or "subtitles burned in", on
+  phone and TV. Direct-played streams show no reason.
+
 ## 1.2.0-hevc (build 39) — 2026-11-15 (afternoon sync)
 
 Based on upstream `main` at `c1371178b` (public version 1.2.0, tester build
