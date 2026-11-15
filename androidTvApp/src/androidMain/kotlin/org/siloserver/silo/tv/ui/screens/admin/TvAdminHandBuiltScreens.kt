@@ -286,6 +286,7 @@ private fun TvSessionRow(session: AdminPlaybackSession, serverUrl: String, busy:
                 subtitle = listOf(
                     AdminText.sessionDetail(session),
                     AdminText.sessionStream(session),
+                    AdminText.sessionReasons(session).orEmpty(),
                     AdminText.sessionProgress(session) + session.progress?.let { " · ${(it * 100).toInt()}%" }.orEmpty(),
                 ).filter { it.isNotBlank() }.joinToString("\n"),
                 chevron = session.hasPlaybackControl,
