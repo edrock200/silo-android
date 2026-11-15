@@ -6,6 +6,21 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 38) — 2026-11-15
+
+Based on upstream `main` at `73e55b96b` (public version 1.2.0, tester build
+`v1.2.0-beta.31`). Fork changes are carried over. The admin spec was
+refreshed from silo-server `2cc78e4c`; the admin console's Tasks screen now
+shows when a running task started.
+
+### Upstream changes since the previous build
+
+- fix(auth): let an invitee retry an invitation claim the server refused (#923)
+- fix(auth): send the invitation token in the request body (#920)
+- fix(i18n): group thousands in collection, Browse and person counts (#916)
+- feat(browse): match the web client's sort options on phone and TV (#843)
+- build: take the Compose Gradle plugin from Maven Central only (#918)
+
 ## 1.2.0-hevc (build 37) — 2026-11-14 (afternoon sync)
 
 Based on upstream `main` at `cc4fd6662` (public version 1.2.0, tester build
