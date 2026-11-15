@@ -201,6 +201,8 @@ data class AdminTask(
     val progress: Double = 0.0,
     @SerialName("manual_only") val manualOnly: Boolean = false,
     @SerialName("next_run_at") val nextRunAt: String? = null,
+    /** When the run in progress began (servers that report it). */
+    @SerialName("started_at") val startedAt: String? = null,
     @SerialName("last_execution") val lastExecution: AdminTaskExecution? = null,
     val triggers: List<AdminTaskTrigger> = emptyList(),
 ) {
