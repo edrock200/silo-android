@@ -144,6 +144,8 @@ data class AdminPlaybackSession(
     @SerialName("stream_location") val streamLocation: String? = null,
     @SerialName("poster_url") val posterUrl: String? = null,
     @SerialName("has_playback_control") val hasPlaybackControl: Boolean = false,
+    /** Why the server changes the file instead of playing it as it is (empty for direct play). */
+    @SerialName("adaptation_reasons") val adaptationReasons: List<String> = emptyList(),
     @SerialName("started_at") val startedAt: String = "",
 ) {
     val displayTitle: String
