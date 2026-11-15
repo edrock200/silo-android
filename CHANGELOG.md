@@ -6,6 +6,25 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 39) — 2026-11-15 (afternoon sync)
+
+Based on upstream `main` at `c1371178b` (public version 1.2.0, tester build
+`v1.2.0-beta.31`). Fork changes are carried over; on Android TV the Trailer
+button keeps its place next to Play while Show Series Info moves into the
+More menu. The admin spec was refreshed from silo-server `e12193d6`.
+
+### Upstream changes since the previous build
+
+- fix(tv): keep Show Series Info on the series after returning to a season page (#938)
+- fix(tv): keep Show Series Info on the series after an entry episode (#937)
+- fix(tv): keep Play off for the previous season while a new season loads (#936)
+- feat(tv): move Show to the series More menu as Show Series Info (#932)
+- fix(player): mark every marker occurrence above the played fill on phone and TV (#934)
+- fix(player): mark every credits range on the phone and TV seek bars (#933)
+- fix(catalog): keep the Specials chip in view and label season zero Specials (#931)
+- fix(catalog): list Specials first as season zero (#929)
+- fix(tv): let Left and Right seek while a skip pill has focus (#928)
+
 ## 1.2.0-hevc (build 38) — 2026-11-15
 
 Based on upstream `main` at `73e55b96b` (public version 1.2.0, tester build
