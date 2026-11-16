@@ -6,6 +6,31 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 41) — 2026-11-16
+
+Based on upstream `main` at `40d34e6d9` (public version 1.2.0, tester build
+`v1.2.0-beta.31`). Fork changes are carried over. Upstream's Google TV voice
+search now shares the fork's single microphone permission entry, and removing
+cards from a Continue Watching or Continue Listening full page still works with
+upstream's new Continue Listening page on TV. The admin spec was refreshed from
+silo-server `699f84ec` (node keys and source access, book authors).
+
+### Upstream changes since the previous build
+
+- fix(tv): show the server's resume point once the player's stop lands (#955)
+- fix(requests): close request screens whenever the server turns requests off (#855)
+- fix(progress): send download progress to the server and stop stale local resume (#847)
+- fix(tv): re-read the episode rail after the player's stop lands (#954)
+- fix(tv): open the Continue Listening row's full page instead of a missing section (#953)
+- chore(i18n): sync translations 2026.11.15-0ba1666 (#952)
+- fix(home): drop Explore all from a Continue Watching row that shows its whole list (#908)
+- fix(player): stack subtitles that are on screen at the same time (#862)
+- feat(i18n): ship 13 more languages from translations 2026.11.15-8dbdfe4 (#950)
+- fix(cast): stop the phone app crashing when Remote Control and local playback overlap (#949)
+- fix(cast): name the connected TV on Play and in the Remote menu on phones (#947)
+- fix(tv): fill the search field from voice on Google TV with Android 12+ (#945)
+- feat(i18n): ship Dutch from translations 2026.11.15-277265f (#943)
+
 ## 1.2.0-hevc (build 40) — 2026-11-15 (evening)
 
 No new upstream Android changes. The admin spec was refreshed from
