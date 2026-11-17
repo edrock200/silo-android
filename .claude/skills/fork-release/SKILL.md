@@ -141,8 +141,15 @@ for both apps.
      add it to both phone and TV, and note it in the changelog;
    - the generic console picks up everything else from the new asset with
      no code change.
-   A spec change alone is a reason to publish a build even when upstream
-   Android has nothing new. The script stamps `info.source` (server commit
+   A spec change alone is a reason to publish a build when upstream Android
+   has nothing new **only if an admin would see something new**: a new
+   path or operation, a new field the console shows, or a hand-built screen
+   change. Skip changes nobody sees (owner decision, 2026-11-17): edits to
+   descriptions, bounds or formats, and fields the console doesn't render,
+   such as translation keys (`message_key`, `message_args`) beside an English
+   message. For those, revert the asset, make no build or Discord post, and
+   give a one-line note naming the skipped change; the next real build picks
+   it up because the asset is regenerated every sync. The script stamps `info.source` (server commit
    and date) into the asset, so compare `paths` and `schemas` only: a change
    to `info.source` alone is not a change; revert the file instead of
    committing it. Upstream commits that touch only CI, docs or `.github/`
