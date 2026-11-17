@@ -6,6 +6,13 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 42) — 2026-11-17
+
+No new upstream Android changes. The admin spec was refreshed from
+silo-server `217ff25a`. The admin console's generic screens now show API keys'
+profile and audience, and collection counts and collections in section
+previews. No hand-built screen changed.
+
 ## 1.2.0-hevc (build 41) — 2026-11-16
 
 Based on upstream `main` at `40d34e6d9` (public version 1.2.0, tester build
