@@ -6,6 +6,18 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 44) — 2026-11-18
+
+No new upstream Android changes. The admin spec was refreshed from
+silo-server `651e55a3`.
+
+### Added in this fork
+
+- **Admin catalog items can show file paths.** The catalog items list in the
+  admin console has a new "include file paths" option. When it is on, each
+  version shows its file's path as the server stores it. Login sessions,
+  unscoped keys and keys with `admin:catalog:paths` can use it.
+
 ## 1.2.0-hevc (build 43) — 2026-11-17 (afternoon)
 
 No new upstream Android changes. The admin spec was refreshed from
