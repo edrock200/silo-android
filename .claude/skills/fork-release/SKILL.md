@@ -203,7 +203,16 @@ for both apps.
      }
      settingsEvaluated { s -> mirror(s.pluginManagement.repositories); mirror(s.dependencyResolutionManagement.repositories) }
      allprojects { mirror(buildscript.repositories); mirror(repositories) }
+     allprojects {
+         tasks.withType(Test).configureEach {
+             systemProperty 'robolectric.dependency.repo.url', 'https://maven-central.storage-download.googleapis.com/maven2/'
+         }
+     }
      ```
+     The last block is for Robolectric tests: after a container reset their
+     Android runtime jar is not cached, and Robolectric downloads it from
+     Maven Central at test time, which fails with "Failed to fetch maven
+     artifact org.robolectric:android-all-instrumented" unless it is mirrored.
    - Each app takes about 15 minutes. Run it in the background with a long
      timeout.
    - Never use `pkill -f <pattern>` in the same command as the build: it
