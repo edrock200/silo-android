@@ -6,6 +6,28 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 46) — 2026-11-19
+
+Based on upstream `main` at `e15879514` (public version 1.2.0, tester build
+`v1.2.0-beta.31`). Fork changes are carried over. The admin spec is unchanged
+apart from its source stamp.
+
+### Upstream changes since the previous build
+
+- fix(detail): open the standard edition before comparing quality (#996)
+- fix(player): renew direct play retries after sustained progress (#993)
+- feat(home): show rows of collections on Home and library pages (#979)
+- feat(navigation): collapse the phone bottom bar on scroll like iOS (#977)
+- feat(audiobooks): match the iOS and tvOS detail and player screens (#975)
+- feat(audiobooks): keep audiobooks playing behind a mini player on phones (#976)
+- feat(libraries): switch library pages from a dock above the nav bar on phones (#973)
+- fix(cards): show audiobook covers square on phone cards (#974)
+- fix(playback): advertise PCM so WAV audiobooks can play (#707)
+- fix(audiobooks): send offline listening on downloaded books to the server (#961)
+- feat(detail): open detail pages from the tapped card on phone and TV (#971)
+- fix(browse): drop the capsule behind the A–Z rail while dragging (#964)
+- fix(profiles): show long profile names in full on Who's watching (#965)
+
 ## 1.2.0-hevc (build 45) — 2026-11-19
 
 No new upstream Android changes. The admin spec was refreshed from
