@@ -6,6 +6,21 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 45) — 2026-11-19
+
+No new upstream Android changes. The admin spec was refreshed from
+silo-server `663882f1`.
+
+### Added in this fork
+
+- **Admin console shows settings set by environment variables.** Media server
+  nodes list the settings their own environment controls (the server refuses
+  changes to those), and protected settings name the environment variable
+  that sets each one.
+- **Plugin tasks show their default schedule.** Scheduled-task plugins show
+  the schedule their manifest declares, and a plugin task binding's trigger
+  now takes an interval, daily, weekly or startup schedule.
+
 ## 1.2.0-hevc (build 44) — 2026-11-18
 
 No new upstream Android changes. The admin spec was refreshed from
