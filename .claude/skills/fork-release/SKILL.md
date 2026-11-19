@@ -174,12 +174,32 @@ for both apps.
 4. **Build** release APKs, never debug (debug builds are much slower on TV).
    Build one app at a time; building both together runs out of memory:
 
+   **Signing key (owner decision, 2026-11-19).** Every fork build is signed
+   with one fixed key, saved as cloud environment variables
+   `SILO_RELEASE_KEYSTORE_B64`, `SILO_RELEASE_KEYSTORE_PASSWORD`,
+   `SILO_RELEASE_KEY_ALIAS` and `SILO_RELEASE_KEY_PASSWORD` (not GitHub
+   secrets, which sessions can't read). Its certificate SHA-256 is
+   `c4ef922f26a947959cdffaaa6326376e229e143e6ae9a359ecb03d3080c4bfa6`
+   (CN=Android Debug, first used by build 46). Builds before 46 used a
+   container debug key that a reset destroyed, which forced users to
+   uninstall once; never let that happen again. Decode the key before
+   building, and if the variables are missing, stop and tell the user
+   instead of building with whatever debug key the container has:
+
+   ```sh
+   test -n "$SILO_RELEASE_KEYSTORE_B64" || { echo "signing key variables missing"; exit 1; }
+   printf '%s' "$SILO_RELEASE_KEYSTORE_B64" | base64 -d > <scratchpad>/fork-release.jks
+   export SILO_RELEASE_KEYSTORE=<scratchpad>/fork-release.jks
+   ```
+
+   Never commit the keystore or print the variables.
+
    ```sh
    export ANDROID_HOME=/home/user/android-sdk   # install platforms;android-36 + build-tools;36.0.0 if missing
    for t in androidTvApp androidApp; do
      ./gradlew -I <scratchpad>/mirror.gradle :$t:assembleRelease \
        -PsiloVersionName=<version>-hevc -PsiloBuildNumber=<build> -PsiloVersionCode=<version_code> \
-       -PallowDebugReleaseSigning=true -PsiloReleaseChannel=sideload \
+       -PsiloReleaseChannel=sideload \
        -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=1g" \
        -Pkotlin.compiler.execution.strategy=in-process \
        -Dorg.gradle.parallel=false --max-workers=2
@@ -219,7 +239,9 @@ for both apps.
      matches its own command line and kills the build.
 5. **Verify** each universal APK: `build-tools/36.0.0/aapt2 dump badging <apk>`
    shows `versionName='<version>-hevc'` and the expected versionCode (phone
-   `code*2`, TV `code*2+1`).
+   `code*2`, TV `code*2+1`), and `build-tools/36.0.0/apksigner verify
+   --print-certs <apk>` shows the certificate SHA-256 above. A different
+   certificate means users can't update: don't publish.
 6. **Changelog.** Add a section to `CHANGELOG.md` on the new branch: the fork
    changes, then `git log --format='- %s' <public tag>..upstream/main`.
 7. **Publish** to the orphan `apk-builds` branch (separate clone, no
