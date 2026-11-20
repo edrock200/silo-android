@@ -123,10 +123,10 @@ data class AdminPlaybackSession(
     @SerialName("profile_name") val profileName: String? = null,
     @SerialName("media_title") val mediaTitle: String = "",
     @SerialName("media_type") val mediaType: String = "",
-    @SerialName("series_name") val seriesName: String? = null,
+    /** Series title for an episode (the server renamed `series_name` to `series_title`). */
+    @SerialName("series_title") val seriesName: String? = null,
     @SerialName("season_number") val seasonNumber: Int? = null,
     @SerialName("episode_number") val episodeNumber: Int? = null,
-    @SerialName("episode_name") val episodeName: String? = null,
     @SerialName("client_label") val clientLabel: String? = null,
     @SerialName("client_name") val clientName: String? = null,
     @SerialName("client_ip") val clientIp: String? = null,
@@ -155,7 +155,8 @@ data class AdminPlaybackSession(
         get() {
             if (seriesName.isNullOrBlank()) return null
             val code = if (seasonNumber != null && episodeNumber != null) "S${seasonNumber}E$episodeNumber" else null
-            return listOfNotNull(code, episodeName?.takeIf { it.isNotBlank() } ?: mediaTitle.takeIf { it != seriesName })
+            // media_title is the episode's own title for an episode.
+            return listOfNotNull(code, mediaTitle.takeIf { it.isNotBlank() && it != seriesName })
                 .joinToString(" · ").takeIf { it.isNotBlank() }
         }
 
