@@ -6,6 +6,23 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 48) — 2026-11-20 (morning)
+
+Based on upstream `main` at `1b4732d90` (public version 1.2.0, tester build
+`v1.2.0-beta.31`). Fork changes are carried over. Signed with the same key as
+build 46. The admin spec was refreshed from silo-server `975bbf4`.
+
+### Added in this fork (admin console, from the new spec)
+
+- Two new plugin pages: every plugin capability on the server, and plugin
+  provisioning status. Plugins, their capabilities and their sign-in bindings
+  show which settings the server's environment controls, and sign-in bindings
+  show their callback mode and whether a callback is pending.
+
+### Upstream changes since the previous build
+
+- fix(home): refresh watch state when Android Home returns (#1009)
+
 ## 1.2.0-hevc (build 47) — 2026-11-20
 
 Based on upstream `main` at `61a4bf1ea` (public version 1.2.0, tester build
