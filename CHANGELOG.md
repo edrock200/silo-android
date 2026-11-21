@@ -24,6 +24,7 @@ build 46. The admin spec was refreshed from silo-server `0d649bd3`.
 
 - fix(tv): stop the hero backdrop banding on dark art (#1015)
 - fix(pairing): make device sign-in approval copy device-neutral and remove legacy match-word footnotes (#1014)
+  (this commit also ships translation catalogs for many more languages, which is why the APKs grew by about 4 MB)
 
 ## 1.2.0-hevc (build 48) — 2026-11-20 (morning)
 
