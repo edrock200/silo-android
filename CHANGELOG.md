@@ -6,6 +6,17 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 50) — 2026-11-21 (morning)
+
+No new upstream Android changes. Signed with the same key as build 46. The
+admin spec was refreshed from silo-server `ae610da1`.
+
+### Admin console (from the new spec)
+
+- AI providers show which environment variable sets them.
+- Task backlog samples show the series, season and episode, not only a title.
+- Backup restore previews list home sections' missing collection items.
+
 ## 1.2.0-hevc (build 49) — 2026-11-21
 
 Based on upstream `main` at `c6dfd52a6` (public version 1.2.0, tester build
