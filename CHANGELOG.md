@@ -6,6 +6,25 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 49) — 2026-11-21
+
+Based on upstream `main` at `c6dfd52a6` (public version 1.2.0, tester build
+`v1.2.0-beta.31`). Fork changes are carried over. Signed with the same key as
+build 46. The admin spec was refreshed from silo-server `0d649bd3`.
+
+### Admin console (from the new spec)
+
+- Media server nodes show whether the deployment manages them, and the
+  request counts show whether requests are turned on.
+- The server now serves request posters itself, but that address needs a
+  signed-in image request, which the app's image loader doesn't send. The
+  hand-built Requests screens keep loading posters from TMDB.
+
+### Upstream changes since the previous build
+
+- fix(tv): stop the hero backdrop banding on dark art (#1015)
+- fix(pairing): make device sign-in approval copy device-neutral and remove legacy match-word footnotes (#1014)
+
 ## 1.2.0-hevc (build 48) — 2026-11-20 (morning)
 
 Based on upstream `main` at `1b4732d90` (public version 1.2.0, tester build
