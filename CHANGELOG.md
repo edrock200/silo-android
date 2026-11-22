@@ -6,6 +6,26 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 52) — 2026-11-22 (morning)
+
+Based on upstream `main` at `e8071640a` (public version 1.2.0, tester build
+`v1.2.0-beta.32`). Fork changes are carried over. Signed with the same key as
+build 46. The admin spec was refreshed from silo-server `c90e406d`.
+
+### Admin console (from the new spec)
+
+- Two new pages for direct connections: what the server supports and its
+  current status (listeners, hosts and settings).
+
+### Upstream changes since the previous build
+
+- test(browse): serialize main thread and wait for seeded page in CatalogLetterIndexViewModelTest (#1031)
+- fix(tv): list each embedded subtitle track once in the player menu (#1013)
+- feat(detail): show the collections a movie or series is in on its page (#1007)
+- fix(player): play an ASS pick that the server burns in on an HLS transcode (#1010)
+- fix(player): time Up Next from the end of the file, not the credits marker (#994)
+- fix(playback): report a slow link on a stall only with slow-transfer evidence (#1011)
+
 ## 1.2.0-hevc (build 51) — 2026-11-22
 
 Based on upstream `main` at `9f5de3107` (public version 1.2.0, tester build
