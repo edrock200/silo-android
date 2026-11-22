@@ -121,8 +121,13 @@ for both apps.
 
 1. **Sync.** `git remote add upstream https://github.com/Silo-Server/silo-android`
    (public, so anonymous fetch works), then
-   `git fetch --depth=200 upstream main:refs/remotes/upstream/main`. If
-   nothing is new since the last release, stop.
+   `git fetch --depth=200 upstream main:refs/remotes/upstream/main` and
+   `git fetch upstream --tags` as two separate commands. Use the explicit
+   refspec: `git fetch -q upstream main --tags` once left `upstream/main` on
+   an old commit, so a check reported nothing new while six commits and a
+   new beta tag were waiting. Confirm `git rev-parse upstream/main` equals
+   the hash `git ls-remote upstream refs/heads/main` prints before deciding.
+   If nothing is new since the last release, stop.
    **Admin API.** Also refresh the server: in the read-only clone
    `/home/user/silo-server` (or `git clone --depth=1
    https://github.com/Silo-Server/silo-server`), `git pull`, then run
