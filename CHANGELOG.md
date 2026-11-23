@@ -6,6 +6,18 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 54) — 2026-11-23 (afternoon)
+
+Based on upstream `main` at `56e23561a` (public version 1.2.0, tester build
+`v1.2.0-beta.32`). Fork changes are carried over; on Android TV the AI
+subtitle player code now sits next to upstream's new paused-too-long notice.
+Signed with the same key as build 46. The admin spec was refreshed from
+silo-server `dde5ed21`.
+
+### Upstream changes since the previous build
+
+- feat(player): say when playback stopped because it was paused too long (#1043)
+
 ## 1.2.0-hevc (build 53) — 2026-11-23
 
 Based on upstream `main` at `bbbfdeeb5` (public version 1.2.0, tester build
