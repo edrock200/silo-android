@@ -6,6 +6,16 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 53) — 2026-11-23
+
+Based on upstream `main` at `bbbfdeeb5` (public version 1.2.0, tester build
+`v1.2.0-beta.32`). Fork changes are carried over. Signed with the same key as
+build 46. The admin spec is unchanged apart from its source stamp.
+
+### Upstream changes since the previous build
+
+- feat(playback): default cellular quality to Auto up to 10 Mbps and cap Data Saver at 2 Mbps (#1036)
+
 ## 1.2.0-hevc (build 52) — 2026-11-22 (morning)
 
 Based on upstream `main` at `e8071640a` (public version 1.2.0, tester build
