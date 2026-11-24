@@ -6,6 +6,16 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 56) — 2026-11-24 (morning)
+
+Based on upstream `main` at `b7c0412af` (public version 1.2.0, tester build
+`v1.2.0-beta.32`). Fork changes are carried over. Signed with the same key as
+build 46. The admin spec is unchanged apart from its source stamp.
+
+### Upstream changes since the previous build
+
+- feat(catalog): label sports episodes by air date (#1035)
+
 ## 1.2.0-hevc (build 55) — 2026-11-24
 
 Based on upstream `main` at `137fca310` (public version 1.2.0, tester build
