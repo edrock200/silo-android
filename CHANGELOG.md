@@ -6,6 +6,16 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 55) — 2026-11-24
+
+Based on upstream `main` at `137fca310` (public version 1.2.0, tester build
+`v1.2.0-beta.32`). Fork changes are carried over. Signed with the same key as
+build 46. The admin spec was refreshed from silo-server `bfc21bb4`.
+
+### Upstream changes since the previous build
+
+- fix(downloads): count an offline stop in the end credits as watched (#1038)
+
 ## 1.2.0-hevc (build 54) — 2026-11-23 (afternoon)
 
 Based on upstream `main` at `56e23561a` (public version 1.2.0, tester build
