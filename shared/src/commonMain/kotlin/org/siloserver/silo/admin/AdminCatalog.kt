@@ -200,6 +200,7 @@ class AdminCatalog(val spec: AdminSpec) {
             "history-imports" to "Watch history import",
             "history-import-sources" to "History import sources",
             "playback-history" to "Playback history",
+            "insights" to "Playback insights",
             "stream-telemetry" to "Stream telemetry",
             "storage-transitions" to "Storage moves",
             "literary-works" to "Book works",
@@ -208,7 +209,7 @@ class AdminCatalog(val spec: AdminSpec) {
 
         private val ACTIVITY = setOf(
             "dashboard", "stats", "sessions", "node-sessions", "requests", "request-counts", "tasks", "jobs",
-            "logs", "server", "system", "playback-history", "stream-telemetry", "downloads",
+            "logs", "server", "system", "playback-history", "insights", "stream-telemetry", "downloads",
         )
         private val PEOPLE = setOf(
             "users", "invitations", "invite-codes", "access-groups", "policy", "devices", "api-keys",
