@@ -14,7 +14,7 @@ admin spec was refreshed from silo-server `3f7985e7`.
 ### Admin console (from the new spec)
 
 - New Playback Insights pages: activity, bandwidth, devices, people, and
-  titles (with a page per title).
+  titles (with a page per title), listed under Activity.
 - Playback History is richer: a page for each session, more filters (series
   and more), and each entry shows the source and delivered codecs,
   resolution, bitrate, HDR, container and which server node handled it.
