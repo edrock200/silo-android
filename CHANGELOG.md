@@ -6,6 +6,18 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 58) — 2026-11-25 (afternoon)
+
+No new upstream Android changes. Signed with the same key as build 46. The
+admin spec was refreshed from silo-server `cfc51c90`.
+
+### Admin console (from the new spec)
+
+- New Playback Insights › Library page: how much of each movie and TV
+  library was played, titles nobody has started, plays by genre, decade and
+  content rating, and how soon new titles get their first play. It can be
+  filtered by date range, library, user and profile.
+
 ## 1.2.0-hevc (build 57) — 2026-11-25
 
 No new upstream Android changes. Signed with the same key as build 46. The
