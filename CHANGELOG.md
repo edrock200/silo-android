@@ -6,6 +6,20 @@ button, live AI subtitles, and an admin console. Fork builds use the upstream pu
 APKs are on the
 [`apk-builds`](https://github.com/edrock200/silo-android/tree/apk-builds) branch.
 
+## 1.2.0-hevc (build 59) — 2026-11-27
+
+No new upstream Android changes. Signed with the same key as build 46. The
+admin spec was refreshed from silo-server `0a631fb9`.
+
+### Admin console (from the new spec)
+
+- New People › Sign-in page: before you turn off password sign-in, it lists
+  the accounts that would lose their way in (grouped by e-mail match or admin
+  link).
+- Now Playing can show how much data each viewer's stream has sent (the
+  "include egress" option, when the server supports it).
+- System resources now show CPU use for the Silo process and FFmpeg.
+
 ## 1.2.0-hevc (build 58) — 2026-11-25 (afternoon)
 
 No new upstream Android changes. Signed with the same key as build 46. The

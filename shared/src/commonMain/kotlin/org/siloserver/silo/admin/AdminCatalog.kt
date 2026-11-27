@@ -205,6 +205,7 @@ class AdminCatalog(val spec: AdminSpec) {
             "storage-transitions" to "Storage moves",
             "literary-works" to "Book works",
             "unmatched" to "Unmatched items",
+            "sign-in" to "Sign-in",
         )
 
         private val ACTIVITY = setOf(
@@ -213,7 +214,7 @@ class AdminCatalog(val spec: AdminSpec) {
         )
         private val PEOPLE = setOf(
             "users", "invitations", "invite-codes", "access-groups", "policy", "devices", "api-keys",
-            "ips", "rate-limits", "request-users", "request-groups",
+            "ips", "rate-limits", "request-users", "request-groups", "sign-in",
         )
         private val MEDIA = setOf(
             "libraries", "library-jobs", "scan", "autoscan", "catalog", "items", "people", "literary-works",
